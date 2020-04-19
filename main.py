@@ -7,6 +7,7 @@ from config import jinja_configuration
 from const.dot_export import META_MODEL_DOT, MODEL_DOT, DIRECTORY_NAME
 from utilities.classes import SimpleType
 from utilities.jinja_utils import *
+from utilities.template_utils import entity_package_path
 
 GENERATED_APP_DIRECTORY = 'generated_app'
 
@@ -42,11 +43,20 @@ def main():
     bom_template = environment.get_template("template/bom.template")
     model_directory = create_directory(join(GENERATED_APP_DIRECTORY, "bom"))
 
+    repository_template = environment.get_template("template/repository.template")
+    generic_repository_template = environment.get_template("template/generic_repository.template")
+    repository_directory = create_directory(join(GENERATED_APP_DIRECTORY, "repository"))
+
     user_model = metamodel.model_from_file('model/model.ent')
 
     for entity in user_model.entities:
         with open(join(model_directory, '%s.java' % entity.name), 'w') as file:
             file.write(bom_template.render(entity=entity))
+        with open(join(repository_directory, '%sRepository.java' % entity.name), 'w') as file:
+            file.write(repository_template.render(entity=entity, packagePath=entity_package_path(entity=entity)))
+
+    with open(join(repository_directory, 'GenericRepository.java'), 'w') as file:
+        file.write(generic_repository_template.render(entity=entity, configs=user_model.configs))
 
     directory = create_directory(DIRECTORY_NAME)
     export_models(metamodel, user_model, dot_directory=directory)

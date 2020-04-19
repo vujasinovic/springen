@@ -1,4 +1,5 @@
 entity User {
+    package -> child
     id: long
     firstName: string
     lastName: string
@@ -13,4 +14,15 @@ entity Address {
     street: string
     number: int
     zipCode: int
+}
+
+package base {
+    package child {
+
+    }
+}
+
+config {
+        dIType : 'Constructor';
+        idType : 'Integer'
 }
