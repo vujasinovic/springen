@@ -1,10 +1,8 @@
 {# Pretty print setup #}
-{% set info_line = 'author: ' ~ author ~ ', version: ' ~ version ~ ', time: ' ~  now | to_datetime %}
+{% set info_line = 'author: ' ~ author ~ ', version: ' ~ version ~ ', time: ' ~  now  %}
 {% set info_line_length = info_line | length %}
 {% set blank_space = 74 - info_line_length - 12 %}
 {% set blank_space_each_side = (blank_space / 2) | int %}
-{# To se your current context as well as available filter and tests, uncomment line below #}
-{# debug #}
 /**
     ##########################################################################
     ############################## BEGIN #####################################
@@ -21,8 +19,7 @@ import org.springframework.data.repository.NoRepositoryBean;
     {% set id_type_value = id_param_filter | first | attr("value") %}
 {% endif %}
 
-@NoRepositoryBean
-public interface GenericRepository<T> extends JpaRepository<T, {{ id_type_value | default('Long') }}> {
+public class {{ app_name | to_pascalcase }}RepositoryImpl<T> extends SimpleJpaRepository<T, {{ id_type_value | default('Long') }}> implements {{ app_name | to_pascalcase }}Repository<T> {
 
 }
 

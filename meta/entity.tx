@@ -12,7 +12,7 @@ Config:
 ;
 
 ConfigParam:
-    key=ID ':' value=STRING
+    key=ID ':' value=BASETYPE
 ;
 
 Package:

@@ -1,10 +1,8 @@
 {# Pretty print setup #}
-{% set info_line = 'author: ' ~ author ~ ', version: ' ~ version ~ ', time: ' ~  now | to_datetime %}
+{% set info_line = 'author: ' ~ author ~ ', version: ' ~ version ~ ', time: ' ~  now  %}
 {% set info_line_length = info_line | length %}
 {% set blank_space = 74 - info_line_length - 12 %}
 {% set blank_space_each_side = (blank_space / 2) | int %}
-{# To se your current context as well as available filter and tests, uncomment line below #}
-{# debug #}
 {% set entity_name_pascalcase = entity.name | to_pascalcase %}
 /**
     ##########################################################################
@@ -19,7 +17,7 @@ import {{ default_package }}.repository;
 import {{ packagePath }}.model.{{ entity_name_pascalcase}};
 
 @Repository
-public interface {{ entity_name_pascalcase}}Repository extends GenericRepository<{{ entity_name_pascalcase}}> {
+public interface {{ entity_name_pascalcase }}Repository extends {{ app_name | to_pascalcase }}Repository<{{ entity_name_pascalcase }}> {
 
 }
 
