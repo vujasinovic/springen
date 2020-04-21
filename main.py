@@ -7,8 +7,14 @@ from config import jinja_configuration
 from const.dot_export import META_MODEL_DOT, MODEL_DOT, DIRECTORY_NAME
 from utilities.classes import SimpleType
 from utilities.jinja_utils import *
+from utilities.template_utils import entity_package_path, get_application_name, write_to_file, get_templates
 
 GENERATED_APP_DIRECTORY = 'generated_app'
+
+BOM_TEMPLATE = 'bom_template'
+BASE_REPOSITORY_TEMPLATE = 'base_repository_template'
+BASE_REPOSITORY_IMPL_TEMPLATE = 'base_repository_impl_template'
+ENTITY_REPOSITORY_TEMPLATE = 'entity_repository_template'
 
 this_folder = dirname(__file__)
 
@@ -39,14 +45,26 @@ def main():
     environment = jinja_configuration.configure_environment()
     metamodel = get_entity_metamodel()
 
-    bom_template = environment.get_template("template/bom.template")
     model_directory = create_directory(join(GENERATED_APP_DIRECTORY, "bom"))
+    repository_directory = create_directory(join(GENERATED_APP_DIRECTORY, "repository"))
+
+    templates_dict = get_templates(environment)
 
     user_model = metamodel.model_from_file('model/model.ent')
+    app_name = get_application_name(user_model.configs)
+
+    write_to_file(templates_dict[BASE_REPOSITORY_TEMPLATE].render(configs=user_model.configs, app_name=app_name),
+                  join(repository_directory, to_pascalcase(app_name) + 'Repository.java'))
+    write_to_file(templates_dict[BASE_REPOSITORY_IMPL_TEMPLATE].render(configs=user_model.configs, app_name=app_name),
+                  join(repository_directory, to_pascalcase(app_name) + 'RepositoryImpl.java'))
 
     for entity in user_model.entities:
-        with open(join(model_directory, '%s.java' % entity.name), 'w') as file:
-            file.write(bom_template.render(entity=entity))
+        write_to_file(templates_dict[BOM_TEMPLATE].render(entity=entity),
+                      join(model_directory, '%s.java' % entity.name))
+        write_to_file(templates_dict[ENTITY_REPOSITORY_TEMPLATE].render(
+            entity=entity, packagePath=entity_package_path(entity=entity), configs=user_model.configs,
+            app_name=app_name),
+                      join(repository_directory, '%sRepository.java' % entity.name))
 
     directory = create_directory(DIRECTORY_NAME)
     export_models(metamodel, user_model, dot_directory=directory)

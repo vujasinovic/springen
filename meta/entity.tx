@@ -1,10 +1,33 @@
 EntityModel:
     simpleTypes *= SimpleType
     entities += Entity
+    packages += Package
+    (configs = Config)?
+;
+
+Config:
+    'config' '{'
+        config_params *= ConfigParam[';']
+    '}'
+;
+
+ConfigParam:
+    key=ID ':' value=BASETYPE
+;
+
+Package:
+    'package' name=ID '{'
+        childPackage*=Package
+    '}'
+;
+
+EntityPackage:
+    'package' '->' package = [Package]
 ;
 
 Entity:
     'entity' name = ID '{'
+        (belongsTo = EntityPackage)?
         properties *= Property
     '}'
 ;

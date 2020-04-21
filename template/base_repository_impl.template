@@ -1,0 +1,30 @@
+{# Pretty print setup #}
+{% set info_line = 'author: ' ~ author ~ ', version: ' ~ version ~ ', time: ' ~  now  %}
+{% set info_line_length = info_line | length %}
+{% set blank_space = 74 - info_line_length - 12 %}
+{% set blank_space_each_side = (blank_space / 2) | int %}
+/**
+    ##########################################################################
+    ############################## BEGIN #####################################
+    {{ '#' * 6 ~ ' ' * blank_space_each_side ~ info_line ~ ' ' * blank_space_each_side ~ '#' * 6 }}
+    ##########################################################################
+*/
+package {{ default_package }}.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.NoRepositoryBean;
+
+{% set id_param_filter = configs.config_params | selectattr("key", "eq", "idType") | list %}
+{% if id_param_filter | length > 0 %}
+    {% set id_type_value = id_param_filter | first | attr("value") %}
+{% endif %}
+
+public class {{ app_name | to_pascalcase }}RepositoryImpl<T> extends SimpleJpaRepository<T, {{ id_type_value | default('Long') }}> implements {{ app_name | to_pascalcase }}Repository<T> {
+
+}
+
+/**
+    ##########################################################################
+    ############################## END #######################################
+    ##########################################################################
+*/
