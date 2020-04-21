@@ -16,6 +16,9 @@ BASE_REPOSITORY_TEMPLATE = 'base_repository_template'
 BASE_REPOSITORY_IMPL_TEMPLATE = 'base_repository_impl_template'
 ENTITY_REPOSITORY_TEMPLATE = 'entity_repository_template'
 
+SERVICE_TEMPLATE = 'service_template'
+SERVICE_IMPLEMENTATION_TEMPLATE = 'service_implementation_template'
+
 this_folder = dirname(__file__)
 
 
@@ -47,6 +50,7 @@ def main():
 
     model_directory = create_directory(join(GENERATED_APP_DIRECTORY, "bom"))
     repository_directory = create_directory(join(GENERATED_APP_DIRECTORY, "repository"))
+    service_directory = create_directory(join(GENERATED_APP_DIRECTORY, "service"))
 
     templates_dict = get_templates(environment)
 
@@ -64,7 +68,13 @@ def main():
         write_to_file(templates_dict[ENTITY_REPOSITORY_TEMPLATE].render(
             entity=entity, packagePath=entity_package_path(entity=entity), configs=user_model.configs,
             app_name=app_name),
-                      join(repository_directory, '%sRepository.java' % entity.name))
+            join(repository_directory, '%sRepository.java' % entity.name))
+        write_to_file(templates_dict[SERVICE_TEMPLATE].render(
+            entity=entity, packagePath=entity_package_path(entity=entity), configs=user_model.configs),
+            join(service_directory, '%sService.java' % entity.name))
+        write_to_file(templates_dict[SERVICE_IMPLEMENTATION_TEMPLATE].render(
+            entity=entity, packagePath=entity_package_path(entity=entity), configs=user_model.configs),
+            join(service_directory, '%sServiceImpl.java' % entity.name))
 
     directory = create_directory(DIRECTORY_NAME)
     export_models(metamodel, user_model, dot_directory=directory)

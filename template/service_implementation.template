@@ -1,0 +1,64 @@
+{% set entity_name_pascalcase = entity.name | to_pascalcase %}
+{% set entity_name = entity.name | to_lowercase %}
+package {{ packagePath }}.service;
+
+import java.util.List;
+import {{ default_package }}.repository.{{ entity_name_pascalcase}}Repository;
+import {{ packagePath }}.model.{{ entity_name_pascalcase}};
+
+
+{% set injection = configs.config_params | selectattr("key", "eq","dependencyInjectionType") | list %}
+{% if injection | length > 0 %}
+    {% set injection_value = injection | first | attr("value") %}
+{% endif %}
+@Service
+public class {{ entity_name_pascalcase}}ServiceImpl implements {{ entity_name_pascalcase}}Service {
+
+    {% if injection_value == 'constructor' %}
+    private final {{entity_name_pascalcase}}Repository {{entity_name}}Repository;
+
+    public {{ entity_name_pascalcase}}ServiceImpl({{ entity_name_pascalcase}}Repository {{ entity_name}}Repository) {
+        this.{{entity_name}}Repository = {{entity_name}}Repository;
+    }
+    {% elif injection_value == 'autowired' %}
+    @Autowired
+    private {{ entity_name_pascalcase}}Repository {{entity_name}}Repository;
+    {% else %}
+    {# setter #}
+    private {{ entity_name_pascalcase}}Repository {{entity_name}}Repository;
+
+    @Autowired
+    public void set{{entity_name_pascalcase}}Repository({{entity_name_pascalcase}}Repository {{entity_name}}Repository) {
+        this.{{entity_name}}Repository = {{entity_name}}Repository;
+    }
+    {% endif %}
+
+    @Override
+    public List<{{ entity_name_pascalcase}}> getAll() {
+        return {{entity_name}}Repository.findAll();
+    }
+
+    @Override
+    public {{ entity_name_pascalcase}} save({{ entity_name_pascalcase}} {{entity_name}}) {
+        return {{entity_name}}Repository.save({{entity_name}});
+    }
+
+    @Override
+    public {{ entity_name_pascalcase}} getOne(long id) {
+        return {{entity_name}}Repository.findById(id);
+    }
+
+    @Override
+    public void delete({{entity_name_pascalcase}} {{entity_name}}) {
+        if({{entity_name}} != null) {
+            {{entity_name}}Repository.delete({{entity_name}});
+        }
+    }
+
+    @Override
+    public void deleteById(long id) {
+        {{entity_name}}Repository.deleteById(id);
+    }
+
+
+}

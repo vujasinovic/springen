@@ -2,11 +2,15 @@ BOM_TEMPLATE = 'bom_template'
 BASE_REPOSITORY_TEMPLATE = 'base_repository_template'
 BASE_REPOSITORY_IMPL_TEMPLATE = 'base_repository_impl_template'
 ENTITY_REPOSITORY_TEMPLATE = 'entity_repository_template'
+SERVICE_TEMPLATE = 'service_template'
+SERVICE_IMPLEMENTATION_TEMPLATE = 'service_implementation_template'
 
 BOM_TEMPLATE_FILE = 'template/bom.template'
 BASE_REPOSITORY_TEMPLATE_FILE = 'template/base_repository.template'
 BASE_REPOSITORY_IMPL_TEMPLATE_FILE = 'template/base_repository_impl.template'
 ENTITY_REPOSITORY_TEMPLATE_FILE = 'template/entity_repository.template'
+SERVICE_TEMPLATE_FILE = 'template/service.template'
+SERVICE_IMPLEMENTATION_FILE = 'template/service_implementation.template'
 
 
 def entity_package_path(entity):
@@ -49,12 +53,16 @@ def get_templates(jinja_environment):
     base_repository_template = jinja_environment.get_template(BASE_REPOSITORY_TEMPLATE_FILE)
     base_repository_impl_template = jinja_environment.get_template(BASE_REPOSITORY_IMPL_TEMPLATE_FILE)
     repository_template = jinja_environment.get_template(ENTITY_REPOSITORY_TEMPLATE_FILE)
+    service_template = jinja_environment.get_template(SERVICE_TEMPLATE_FILE)
+    service_implementation_template = jinja_environment.get_template(SERVICE_IMPLEMENTATION_FILE)
 
     templates_dict = {
             BOM_TEMPLATE: bom_template,
             BASE_REPOSITORY_TEMPLATE: base_repository_template,
             BASE_REPOSITORY_IMPL_TEMPLATE: base_repository_impl_template,
-            ENTITY_REPOSITORY_TEMPLATE: repository_template
+            ENTITY_REPOSITORY_TEMPLATE: repository_template,
+            SERVICE_TEMPLATE: service_template,
+            SERVICE_IMPLEMENTATION_TEMPLATE: service_implementation_template
     }
 
     return templates_dict
