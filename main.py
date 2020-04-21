@@ -63,17 +63,18 @@ def main():
                   join(repository_directory, to_pascalcase(app_name) + 'RepositoryImpl.java'))
 
     for entity in user_model.entities:
+        packagePath = entity_package_path(entity=entity)
         write_to_file(templates_dict[BOM_TEMPLATE].render(entity=entity),
                       join(model_directory, '%s.java' % entity.name))
         write_to_file(templates_dict[ENTITY_REPOSITORY_TEMPLATE].render(
-            entity=entity, packagePath=entity_package_path(entity=entity), configs=user_model.configs,
+            entity=entity, packagePath=packagePath, configs=user_model.configs,
             app_name=app_name),
             join(repository_directory, '%sRepository.java' % entity.name))
         write_to_file(templates_dict[SERVICE_TEMPLATE].render(
-            entity=entity, packagePath=entity_package_path(entity=entity), configs=user_model.configs),
+            entity=entity, packagePath=packagePath, configs=user_model.configs),
             join(service_directory, '%sService.java' % entity.name))
         write_to_file(templates_dict[SERVICE_IMPLEMENTATION_TEMPLATE].render(
-            entity=entity, packagePath=entity_package_path(entity=entity), configs=user_model.configs),
+            entity=entity, packagePath=packagePath, configs=user_model.configs),
             join(service_directory, '%sServiceImpl.java' % entity.name))
 
     directory = create_directory(DIRECTORY_NAME)
