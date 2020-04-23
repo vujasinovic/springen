@@ -1,0 +1,15 @@
+{% set entity_name_pascalcase = entity.name | to_pascalcase %}
+{% set entity_name = entity.name | to_lowercase %}
+package {{ default_package }}.service;
+
+import java.util.List;
+import {{ packagePath }}.model.{{ entity_name_pascalcase}};
+
+public interface {{ entity_name_pascalcase}}Service {
+    List<{{ entity_name_pascalcase }}> getAll();
+    {{ entity_name_pascalcase }} save({{ entity_name_pascalcase}} {{ entity_name}});
+    {{ entity_name_pascalcase }} getOne(Long id);
+    void delete({{ entity_name_pascalcase}} {{ entity_name}});
+    void deleteById(Long id);
+
+}
