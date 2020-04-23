@@ -43,7 +43,7 @@ public class {{ entity_name_pascalcase}}ServiceImpl implements {{ entity_name_pa
     }
 
     @Override
-    public Optional<{{ entity_name_pascalcase}}> getOne(long id) {
+    public Optional<{{ entity_name_pascalcase}}> getOne(Long id) {
         return {{entity_name}}Repository.findById(id);
     }
 
@@ -55,7 +55,7 @@ public class {{ entity_name_pascalcase}}ServiceImpl implements {{ entity_name_pa
     }
 
     @Override
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         {{entity_name}}Repository.deleteById(id);
     }
 
