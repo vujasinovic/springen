@@ -34,6 +34,8 @@ def set_filters(jinja_environment):
     jinja_environment.filters['javatype'] = javatype
     jinja_environment.filters['to_pascalcase'] = to_pascalcase
     jinja_environment.filters['to_lowercase'] = to_lowercase
+    jinja_environment.filters['template_name'] = template_name
+    jinja_environment.filters['config_param'] = get_config_param
 
 
 def set_globals(jinja_environment):

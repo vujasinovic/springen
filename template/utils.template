@@ -1,0 +1,17 @@
+{%- macro gen_template_metadata(author, version, time, class_name, template_name, grammar='entity.tx') -%}
+    {# Pretty print setup #}
+    {% set info_line_1 = ' generated class: ' ~ class_name ~ '.java, template used : ' ~ template_name  %}
+    {% set info_line_2 = ' author: ' ~ author ~ ', version: ' ~ version ~ ', time: ' ~  time ~ ', grammar: ' ~  grammar %}
+/**
+    ######################################## BEGIN ###############################################
+    {{ info_line_1 }}
+    {{ info_line_2 }}
+    ##############################################################################################
+*/
+{%- endmacro -%}
+
+{%- macro block_end() -%}
+/**
+    ########################################  END ################################################
+*/
+{%- endmacro -%}

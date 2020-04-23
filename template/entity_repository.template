@@ -1,28 +1,18 @@
-{# Pretty print setup #}
-{% set info_line = 'author: ' ~ author ~ ', version: ' ~ version ~ ', time: ' ~  now  %}
-{% set info_line_length = info_line | length %}
-{% set blank_space = 74 - info_line_length - 12 %}
-{% set blank_space_each_side = (blank_space / 2) | int %}
+{% import 'template/utils.template' as utils %}
+{% set app_name_pascalcase = app_name | to_pascalcase %}
 {% set entity_name_pascalcase = entity.name | to_pascalcase %}
-/**
-    ##########################################################################
-    ############################## BEGIN #####################################
-    {{ '#' * 6 ~ ' ' * blank_space_each_side ~ info_line ~ ' ' * blank_space_each_side ~ '#' * 6 }}
-    ##########################################################################
-*/
+{% set class_name = entity_name_pascalcase ~ 'Repository' %}
+{% set template_name = self | template_name %}
+{{ utils.gen_template_metadata(author=author, version=version, time=now, class_name=class_name, template_name=template_name) }}
 package {{ packagePath }}.repository;
 
-import {{ default_package }}.repository;
+import {{ default_package }}.repository.{{ app_name_pascalcase }}Repository;
 
 import {{ packagePath }}.model.{{ entity_name_pascalcase}};
 
 @Repository
-public interface {{ entity_name_pascalcase }}Repository extends {{ app_name | to_pascalcase }}Repository<{{ entity_name_pascalcase }}> {
+public interface {{ entity_name_pascalcase }}Repository extends {{ app_name_pascalcase }}Repository<{{ entity_name_pascalcase }}> {
 
 }
 
-/**
-    ##########################################################################
-    ############################## END #######################################
-    ##########################################################################
-*/
+{{ utils.block_end() }}
