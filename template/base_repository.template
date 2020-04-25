@@ -1,14 +1,8 @@
-{# Pretty print setup #}
-{% set info_line = 'author: ' ~ author ~ ', version: ' ~ version ~ ', time: ' ~  now  %}
-{% set info_line_length = info_line | length %}
-{% set blank_space = 74 - info_line_length - 12 %}
-{% set blank_space_each_side = (blank_space / 2) | int %}
-/**
-    ##########################################################################
-    ############################## BEGIN #####################################
-    {{ '#' * 6 ~ ' ' * blank_space_each_side ~ info_line ~ ' ' * blank_space_each_side ~ '#' * 6 }}
-    ##########################################################################
-*/
+{% import 'template/utils.template' as utils %}
+{% set app_name_pascalcase = app_name | to_pascalcase %}
+{% set class_name = app_name_pascalcase ~ 'Repository' %}
+{% set template_name = self | template_name %}
+{{ utils.gen_template_metadata(author=author, version=version, time=now, class_name=class_name, template_name=template_name) }}
 package {{ default_package }}.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,8 +18,4 @@ public interface {{ app_name | to_pascalcase }}Repository<T> extends JpaReposito
 
 }
 
-/**
-    ##########################################################################
-    ############################## END #######################################
-    ##########################################################################
-*/
+{{ utils.block_end() }}
