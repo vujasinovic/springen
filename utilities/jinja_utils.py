@@ -36,6 +36,7 @@ def set_filters(jinja_environment):
     jinja_environment.filters['to_lowercase'] = to_lowercase
     jinja_environment.filters['template_name'] = template_name
     jinja_environment.filters['config_param'] = get_config_param
+    jinja_environment.filters['last_character'] = get_last_character
 
 
 def set_globals(jinja_environment):

@@ -1,0 +1,44 @@
+{% import 'template/utils.template' as utils %}
+{% set template_name = self | template_name %}
+{% set entity_name_pascalcase = entity.name | to_pascalcase %}
+{% set entity_name = entity.name | to_lowercase %}
+{% set last_character_of_entity = entity.name | last_character %}
+{% if last_character_of_entity == 's' %}
+    {% set sufix = 'es' %}
+{% else %}
+    {% set sufix = 's' %}
+{% endif %}
+{{ utils.gen_template_metadata(author=author, version=version, time=now, class_name=class_name, template_name=template_name) }}
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+
+@Controller
+@RequestMapping(value="/{{entity_name}}{{sufix}}")
+public class {{ entity_name_pascalcase }}Controller {
+
+    {% if injection_value == 'constructor' %}
+    private final {{entity_name_pascalcase}}Service {{entity_name}}Service;
+
+    public {{ entity_name_pascalcase}}Controller({{ entity_name_pascalcase}}Controller {{ entity_name}}Service) {
+        this.{{entity_name}}Service = {{entity_name}}Service;
+    }
+    {% elif injection_value == 'property'  %}
+    @Autowired
+    private {{ entity_name_pascalcase}}Service {{entity_name}}Service;
+    {% else %}
+    {# setter #}
+    private {{ entity_name_pascalcase}}Service {{entity_name}}Service;
+
+    public void set{{entity_name_pascalcase}}Service({{entity_name_pascalcase}}Service {{entity_name}}Service) {
+        this.{{entity_name}}Service = {{entity_name}}Service;
+    }
+    {% endif %}
+
+
+}
+
