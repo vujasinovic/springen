@@ -6,6 +6,10 @@ def to_lowercase(st):
     return st[0].lower() + st[1:]
 
 
+def get_last_character(st):
+    return st[-1];
+
+
 def template_name(template):
     full_qualified_name = template._TemplateReference__context.name
     begin_ind = full_qualified_name.rfind('/') + 1
@@ -19,3 +23,4 @@ def template_name(template):
 def get_config_param(config_params, attribute_value):
     param_value = next((param for param in config_params if param.key == attribute_value), None)
     return param_value
+
