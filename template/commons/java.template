@@ -1,0 +1,24 @@
+{% set ws = ' '%}
+{% set semicolon = ';' %}
+{% set equals = ' = ' %}
+
+{% set private_modifier = 'private' %}
+{% set public_modifier= 'public' %}
+{% set protected_modifier= 'protected' %}
+
+{%- macro field_definition(modifier, field_type, field_name, is_static, is_final) -%}
+    {% set field = modifier ~ ws %}
+    {% if is_static and not is_final %}
+        {% set field = field ~ 'static' ~ ws ~ field_type ~ ws ~ field_name %}
+    {% endif %}
+    {% if is_final and not is_static %}
+        {% set field = field ~ 'final' ~ ws ~ field_type ~ ws ~ field_name %}
+    {% endif %}
+    {% if is_static and is_final %}
+        {% set field = field ~ 'static' ~ ws ~ 'final' ~ ws ~ field_type ~ ws ~ field_name  %}
+    {% endif %}
+    {% if not is_static and not is_final %}
+        {% set field = field ~ field_type ~ ws ~ field_name  %}
+    {% endif %}
+{{ field }}
+{%- endmacro -%}

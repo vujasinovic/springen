@@ -1,19 +1,27 @@
 {% import 'template/utils.template' as utils %}
+{% import 'template/commons/java.template' as java %}
+package {{ default_package }}.controller;
 {% set template_name = self | template_name %}
 {% set entity_name_pascalcase = entity.name | to_pascalcase %}
 {% set entity_name = entity.name | to_lowercase %}
+{% set dto_name = entity_name_pascalcase ~ 'Dto'%}
+{% set dto_name_obj = entity_name ~ 'Dto' %}
 {% set class_name = entity_name_pascalcase ~ 'Controller' %}
 {% set last_character_of_entity = entity.name | last_character %}
 {% if last_character_of_entity == 's' %}
-    {% set sufix = 'es' %}
+    {% set entity_name_suffix = 'es' %}
 {% else %}
-    {% set sufix = 's' %}
+    {% set entity_name_suffix = 's' %}
 {% endif %}
+{% set entity_name_plural = entity.name | to_lowercase ~ entity_name_suffix | to_lowercase %}
 {% set injection = configs.config_params | selectattr("key", "eq","dependencyInjectionType") | list %}
 {% if injection | length > 0 %}
     {% set injection_value = injection | first | attr("value") %}
 {% endif %}
 {{ utils.gen_template_metadata(author=author, version=version, time=now, class_name=class_name, template_name=template_name) }}
+{% set service_class = entity_name_pascalcase ~ 'Service' %}
+{% set service_obj = entity_name ~ 'Service' %}
+{% set service_class_obj_pair = service_class ~ ' ' ~ service_obj %}
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,27 +31,62 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
 @Controller
-@RequestMapping(value="/{{entity_name}}{{sufix}}")
-public class {{ entity_name_pascalcase }}Controller {
+@RequestMapping(value = "/{{ entity_name_plural }}")
+{{ java.public_modifier }} class {{ class_name }} {
+    {{ java.field_definition(java.private_modifier, 'String', 'BASE_PAGE', True, True) }} = "{{ entity_name_plural }}";
+    {{ java.field_definition(java.private_modifier, 'String', 'FORM_PAGE', True, True) }} = "create{{ entity_name_pascalcase }}";
 
     {% if injection_value == 'constructor' %}
-    private final {{entity_name_pascalcase}}Service {{entity_name}}Service;
+    {{ java.field_definition(java.private_modifier, service_class, service_obj, is_final=True) }};
 
-    public {{ entity_name_pascalcase}}Controller({{ entity_name_pascalcase}}Controller {{ entity_name}}Service) {
-        this.{{entity_name}}Service = {{entity_name}}Service;
+    public {{ class_name }}({{ service_class_obj_pair }}) {
+        this.{{ service_obj }} = {{ service_obj }};
     }
     {% elif injection_value == 'property'  %}
     @Autowired
-    private {{ entity_name_pascalcase}}Service {{entity_name}}Service;
+    {{ java.field_definition(modifier=private_modifier, field_name=entity_name) }}
     {% else %}
-    {# setter #}
-    private {{ entity_name_pascalcase}}Service {{entity_name}}Service;
 
-    public void set{{entity_name_pascalcase}}Service({{entity_name_pascalcase}}Service {{entity_name}}Service) {
-        this.{{entity_name}}Service = {{entity_name}}Service;
+    {{ java.field_definition(java.private_modifier, service_class, service_obj)}}
+
+    public void set{{ service_class }}({{ service_class_obj_pair }}) {
+        this.{{ service_obj }} = {{ service_obj }};
     }
     {% endif %}
 
+    @GetMapping
+    public String create{{ entity_name_pascalcase }}(Model model) {
+        model.addAttribute("{{ entity_name }}", new {{ dto_name }}());
+        return FORM_PAGE;
+    }
 
+    @GetMapping("/all")
+    public String getAll(Model model) {
+        model.addAttribute("{{ entity_name_plural }}", {{ service_obj }}.getAll());
+
+        return BASE_PAGE;
+    }
+
+    @PostMapping
+    public String createOrUpdate{{ entity_name_pascalcase }}(final @ModelAttribute("{{ entity_name }}") {{ dto_name }} {{ dto_name_obj }}) {
+        {{ service_obj }}.save({{ dto_name_obj }});
+
+        return "redirect:/all"
+    }
+
+    @GetMapping("/edit")
+    public String edit{{ entity_name_pascalcase }}(@RequestParam("id") Long id, Model model {
+        final {{ dto_name }} {{ dto_name_obj }} = {{ service_obj }}.getOne(id);
+        model.addAttribute("{{ entity_name }}", {{ dto_name_obj }});
+
+        return FORM_PAGE;
+    }
+
+    @DeleteMapping
+    public String delete{{ entity_name_pascalcase }}(@RequestParam("id") Long id) {
+        {{ service_obj }}.deleteById(id);
+
+        return "redirect:/all";
+    }
 }
 
