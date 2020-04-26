@@ -2,11 +2,16 @@
 {% set template_name = self | template_name %}
 {% set entity_name_pascalcase = entity.name | to_pascalcase %}
 {% set entity_name = entity.name | to_lowercase %}
+{% set class_name = entity_name_pascalcase ~ 'Controller' %}
 {% set last_character_of_entity = entity.name | last_character %}
 {% if last_character_of_entity == 's' %}
     {% set sufix = 'es' %}
 {% else %}
     {% set sufix = 's' %}
+{% endif %}
+{% set injection = configs.config_params | selectattr("key", "eq","dependencyInjectionType") | list %}
+{% if injection | length > 0 %}
+    {% set injection_value = injection | first | attr("value") %}
 {% endif %}
 {{ utils.gen_template_metadata(author=author, version=version, time=now, class_name=class_name, template_name=template_name) }}
 
