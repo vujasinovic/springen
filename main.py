@@ -19,6 +19,9 @@ SERVICE_TEMPLATE = 'service_template'
 SERVICE_IMPLEMENTATION_TEMPLATE = 'service_implementation_template'
 MAIN_TEMPLATE = 'main_template'
 CONTROLLER_TEMPLATE = 'controller_template'
+DTO_TEMPLATE = 'dto_template'
+CONVERTER_ENTITY_TO_DTO_TEMPLATE = 'converter_entity_to_dto_template'
+CONVERTER_DTO_TO_ENTITY_TEMPLATE = 'converter_dto_to_entity_template'
 
 this_folder = dirname(__file__)
 
@@ -54,6 +57,8 @@ def main():
     service_directory = create_directory(join(GENERATED_APP_DIRECTORY, "service"))
     main_directory = create_directory(join(GENERATED_APP_DIRECTORY, "main"))
     controller_directory = create_directory(join(GENERATED_APP_DIRECTORY, "controller"))
+    dto_directory = create_directory(join(GENERATED_APP_DIRECTORY, "dto"))
+    converter_directory = create_directory(join(GENERATED_APP_DIRECTORY, "converter"))
 
     templates_dict = get_templates(environment)
 
@@ -85,7 +90,16 @@ def main():
             join(main_directory, to_pascalcase(app_name) + 'Application.java'))
         write_to_file(templates_dict[CONTROLLER_TEMPLATE].render(
             entity=entity, packagePath=packagePath, configs=user_model.configs),
-            join(controller_directory, '%sController' % entity.name))
+            join(controller_directory, '%sController.java' % entity.name))
+        write_to_file(templates_dict[DTO_TEMPLATE].render(
+            entity=entity, packagePath=packagePath, configs=user_model.configs),
+            join(dto_directory, '%sDto.java' % entity.name))
+        write_to_file(templates_dict[CONVERTER_ENTITY_TO_DTO_TEMPLATE].render(
+            entity=entity, packagePath=packagePath, configs=user_model.configs),
+            join(converter_directory, '%sTo%sDtoConverter.java' % (entity.name, entity.name)))
+        write_to_file(templates_dict[CONVERTER_DTO_TO_ENTITY_TEMPLATE].render(
+            entity=entity, packagePath=packagePath, configs=user_model.configs),
+            join(converter_directory, '%sDto%sConverter.java' % (entity.name, entity.name)))
 
     directory = create_directory(DIRECTORY_NAME)
     export_models(metamodel, user_model, dot_directory=directory)

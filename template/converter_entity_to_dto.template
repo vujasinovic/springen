@@ -1,0 +1,23 @@
+{% import 'template/utils.template' as utils %}
+{% set template_name = self | template_name %}
+{% set entity_name_pascalcase = entity.name | to_pascalcase %}
+{% set entity_name = entity.name | to_lowercase %}
+{% set class_name = entity_name_pascalcase ~ 'Dto' %}
+package {{ packagePath }}.converter;
+
+import org.springframework.stereotype.Component;
+import org.springframework.core.convert.converter.Converter;
+
+import {{ packagePath }}.model.{{ entity_name_pascalcase}};
+import {{ packagePath }}.dto.{{ entity_name_pascalcase}}Dto;
+
+
+@Component
+public class {{ entity_name_pascalcase }}To{{ entity_name_pascalcase }}Dto implements Converter<{{ entity_name_pascalcase }}Dto,{{ entity_name_pascalcase }}> {
+
+    @Override
+    public {{ entity_name_pascalcase }} convert({{ entity_name_pascalcase }}Dto {{entity_name}}) {
+        // TODO Auto-generated method stub
+		return null;
+    }
+}
