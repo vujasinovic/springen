@@ -12,18 +12,17 @@ public class {{ entity_name_pascalcase }}Dto {
     private {{property.type | javatype}} {{property.name}};
     {% endfor %}
 
-    {% for property in entity.properties%}
-
     public {{ entity_name_pascalcase }}Dto() {
 
     }
 
     public {{ entity_name_pascalcase }}Dto({% for property in entity.properties %}{{property.type | javatype }} {{property.name}}{% if property != entity.properties[-1] %},{% endif %}{% endfor %}) {
-        super();
     {% for property in entity.properties %}
         this.{{property.name}} = {{property.name}};
     {% endfor %}
     }
+
+    {% for property in entity.properties%}
 
     public {{property.type | javatype}} get{{property.name | to_pascalcase}}() {
         return {{property.name}};

@@ -1,5 +1,7 @@
 {% set entity_name_pascalcase = entity.name | to_pascalcase %}
 {% set entity_name = entity.name | to_lowercase %}
+{% set entity_name_dto_pascalcase = entity_name_pascalcase ~ 'Dto' %}
+{% set entity_name_dto = entity_name ~ 'Dto' %}
 {% set injection = configs.config_params | selectattr("key", "eq","dependencyInjectionType") | list %}
 {% if injection | length > 0 %}
     {% set injection_value = injection | first | attr("value") %}
@@ -19,7 +21,7 @@ import {{ default_package }}.converter.{{entity_name_pascalcase}}To{{entity_name
 import {{ default_package }}.converter.{{entity_name_pascalcase}}DtoTo{{entity_name_pascalcase}}Converter;
 import {{ default_package }}.repository.{{ entity_name_pascalcase}}Repository;
 import {{ packagePath }}.model.{{ entity_name_pascalcase}};
-import {{ packagePath }}.dto.{{ entity_name_pascalcase}}Dto;
+import {{ packagePath }}.dto.{{ entity_name_dto_pascalcase}};
 
 @Service
 public class {{ entity_name_pascalcase}}ServiceImpl implements {{ entity_name_pascalcase}}Service {
@@ -42,37 +44,35 @@ public class {{ entity_name_pascalcase}}ServiceImpl implements {{ entity_name_pa
     }
     {% endif %}
 
-    private {{entity_name_pascalcase}}To{{entity_name_pascalcase}}DtoConverter {{entity_name}}To{{entity_name_pascalcase}}DtoConverter;
+    private {{entity_name_pascalcase}}To{{entity_name_dto_pascalcase}}Converter {{entity_name}}To{{entity_name_dto_pascalcase}}Converter;
 
-    private {{entity_name_pascalcase}}DtoTo{{entity_name_pascalcase}}Converter {{entity_name}}DtoTo{{entity_name_pascalcase}}Converter;
+    private {{entity_name_dto_pascalcase}}To{{entity_name_pascalcase}}Converter {{entity_name_dto}}To{{entity_name_pascalcase}}Converter;
 
     @Override
-    public List<{{ entity_name_pascalcase}}Dto> getAll() {
-        List<{{ entity_name_pascalcase }}Dto> {{entity_name}}DtoList = new ArrayList<>();
-        List<{{ entity_name_pascalcase }}> {{entity_name}}List = {{entity_name}}Repository.findAll();
-        for({{ entity_name_pascalcase }} {{ entity_name }} : {{entity_name}}List}}) {
-            {{entity_name}}DtoList.add({{entity_name}}To{{entity_name_pascalcase}}DtoConverter.convert({{entity_name}}));
+    public List<{{ entity_name_dto_pascalcase}}> getAll() {
+        List<{{ entity_name_dto_pascalcase }}> {{entity_name_dto}}List = new ArrayList<>();
+        for({{ entity_name_pascalcase }} {{ entity_name }} : {{entity_name}}Repository.findAll()) {
+            {{entity_name_dto}}List.add({{entity_name}}To{{entity_name_dto_pascalcase}}Converter.convert({{entity_name}}));
         }
-        return {{entity_name}}DtoList;
+        return {{entity_name_dto}}List;
     }
 
     @Override
-    public {{ entity_name_pascalcase}}Dto save({{ entity_name_pascalcase}}Dto {{entity_name}}Dto) {
-        {{ entity_name_pascalcase}} {{entity_name}} = {{entity_name}}DtoTo{{entity_name_pascalcase}}.convert({{entity_name}}Dto);
-        {{entity_name}}Repository.save({{entity_name}});
-        return {{entity_name}}Dto;
+    public {{ entity_name_dto_pascalcase}} save({{ entity_name_dto_pascalcase}} {{entity_name_dto}}) {
+        {{ entity_name_pascalcase}} {{entity_name}} = {{entity_name}}Repository.save({{entity_name_dto}}To{{entity_name_pascalcase}}Converter.convert({{entity_name_dto}}));
+        return {{entity_name}}To{{entity_name_dto_pascalcase}}Converter.convert({{entity_name}});
     }
 
     @Override
-    public {{ entity_name_pascalcase}}Dto getOne(Long id) {
+    public {{ entity_name_pascalcase_dto}} getOne(Long id) {
         Optional<{{entity_name_pascalcase}}> {{entity_name}} = {{entity_name}}Repository.findById(id);
-        {{ entity_name_pascalcase}}Dto {{entity_name}}Dto = {{entity_name}}To{{entity_name_pascalcase}}DtoConverter.convert({{entity_name}});
-        return {{entity_name}}Dto;
+        {{ entity_name_dto_pascalcase}} {{entity_name_dto}} = {{entity_name}}To{{entity_name_dto_pascalcase}}Converter.convert({{entity_name}}.get());
+        return {{entity_name_dto}};
     }
 
     @Override
-    public void delete({{entity_name_pascalcase}}Dto {{entity_name}}Dto) {
-        {{ entity_name_pascalcase}} {{entity_name}} = {{entity_name}}DtoTo{{entity_name_pascalcase}}.convert({{entity_name}}Dto);
+    public void delete({{entity_name_dto_pascalcase}} {{entity_name_dto}}) {
+        {{ entity_name_pascalcase}} {{entity_name}} = {{entity_name_dto}}To{{entity_name_pascalcase}}.convert({{entity_name_dto}});
         if({{entity_name}} != null) {
             {{entity_name}}Repository.delete({{entity_name}});
         }
