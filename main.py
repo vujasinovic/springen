@@ -85,7 +85,7 @@ def main():
             join(main_directory, to_pascalcase(app_name) + 'Application.java'))
         write_to_file(templates_dict[CONTROLLER_TEMPLATE].render(
             entity=entity, packagePath=packagePath, configs=user_model.configs),
-            join(controller_directory, '%sController' % entity.name))
+            join(controller_directory, '%sController.java' % entity.name))
 
     directory = create_directory(DIRECTORY_NAME)
     export_models(metamodel, user_model, dot_directory=directory)
