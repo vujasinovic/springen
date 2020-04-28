@@ -13,11 +13,10 @@ import {{ packagePath }}.dto.{{ entity_name_pascalcase}}Dto;
 
 
 @Component
-public class {{ entity_name_pascalcase }}To{{ entity_name_pascalcase }}Dto implements Converter<{{ entity_name_pascalcase }}Dto,{{ entity_name_pascalcase }}> {
+public class {{ entity_name_pascalcase }}To{{ entity_name_pascalcase }}DtoConverter implements Converter<{{ entity_name_pascalcase }},{{ entity_name_pascalcase }}Dto> {
 
     @Override
-    public {{ entity_name_pascalcase }} convert({{ entity_name_pascalcase }}Dto {{entity_name}}) {
-        // TODO Auto-generated method stub
-		return null;
+    public {{ entity_name_pascalcase }}Dto convert({{ entity_name_pascalcase }} {{entity_name}}) {
+        return new {{ entity_name_pascalcase }}Dto({% for property in entity.properties %}{{ entity_name }}.get{{ property.name | to_pascalcase}}(){% if property != entity.properties[-1] %},{% endif %}{% endfor %})
     }
 }
