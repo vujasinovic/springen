@@ -18,6 +18,9 @@ package {{ default_package }}.controller;
 {% if injection | length > 0 %}
     {% set injection_value = injection | first | attr("value") %}
 {% endif %}
+{% if id_param_filter | length > 0 %}
+    {% set id_type_value = id_param_filter | first | attr("value") %}
+{% endif %}
 {{ utils.gen_template_metadata(author=author, version=version, time=now, class_name=class_name, template_name=template_name) }}
 {% set service_class = entity_name_pascalcase ~ 'Service' %}
 {% set service_obj = entity_name ~ 'Service' %}
@@ -35,6 +38,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 {{ java.public_modifier }} class {{ class_name }} {
     {{ java.field_definition(java.private_modifier, 'String', 'BASE_PAGE', True, True) }} = "{{ entity_name_plural }}";
     {{ java.field_definition(java.private_modifier, 'String', 'FORM_PAGE', True, True) }} = "create{{ entity_name_pascalcase }}";
+    {{ java.field_definition(java.private_modifier, 'String', 'OVERVIEW_PAGE', True, True) }} = "{{ entity_name }}Overview";
 
     {% if injection_value == 'constructor' %}
     {{ java.field_definition(java.private_modifier, service_class, service_obj, is_final=True) }};
@@ -60,6 +64,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
         return FORM_PAGE;
     }
 
+    @GetMapping("/{id}")
+    public String getOverview(@PathVariable("id") {{ id_type_value | default('Long') }} id, Model model) {
+        model.addAttribute("{{ entity_name }}", {{ service_obj }}.getOne(id));
+        return OVERVIEW_PAGE;
+    }
+
     @GetMapping("/all")
     public String getAll(Model model) {
         model.addAttribute("{{ entity_name_plural }}", {{ service_obj }}.getAll());
@@ -75,7 +85,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
     }
 
     @GetMapping("/edit")
-    public String edit{{ entity_name_pascalcase }}(@RequestParam("id") Long id, Model model {
+    public String edit{{ entity_name_pascalcase }}(@RequestParam("id") {{ id_type_value | default('Long') }} id, Model model {
         final {{ dto_name }} {{ dto_name_obj }} = {{ service_obj }}.getOne(id);
         model.addAttribute("{{ entity_name }}", {{ dto_name_obj }});
 
@@ -83,7 +93,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
     }
 
     @DeleteMapping
-    public String delete{{ entity_name_pascalcase }}(@RequestParam("id") Long id) {
+    public String delete{{ entity_name_pascalcase }}(@RequestParam("id") {{ id_type_value | default('Long') }} id) {
         {{ service_obj }}.deleteById(id);
 
         return "redirect:/all";
