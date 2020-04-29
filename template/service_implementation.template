@@ -29,24 +29,47 @@ public class {{ entity_name_pascalcase}}ServiceImpl implements {{ entity_name_pa
     {% if injection_value == 'constructor' %}
     private final {{entity_name_pascalcase}}Repository {{entity_name}}Repository;
 
-    public {{ entity_name_pascalcase}}ServiceImpl({{ entity_name_pascalcase}}Repository {{ entity_name}}Repository) {
+    private final {{entity_name_pascalcase}}To{{entity_name_dto_pascalcase}}Converter {{entity_name}}To{{entity_name_dto_pascalcase}}Converter;
+
+    private final {{entity_name_dto_pascalcase}}To{{entity_name_pascalcase}}Converter {{entity_name_dto}}To{{entity_name_pascalcase}}Converter;
+
+    public {{ entity_name_pascalcase}}ServiceImpl({{ entity_name_pascalcase}}Repository {{ entity_name}}Repository,{{entity_name_pascalcase}}To{{entity_name_dto_pascalcase}}Converter {{entity_name}}To{{entity_name_dto_pascalcase}}Converter, {{entity_name_dto_pascalcase}}To{{entity_name_pascalcase}}Converter {{entity_name_dto}}To{{entity_name_pascalcase}}Converter) {
         this.{{entity_name}}Repository = {{entity_name}}Repository;
+        this.{{entity_name}}To{{entity_name_dto_pascalcase}}Converter = {{entity_name}}To{{entity_name_dto_pascalcase}}Converter;
+        this.{{entity_name_dto}}To{{entity_name_pascalcase}}Converter = {{entity_name_dto}}To{{entity_name_pascalcase}}Converter;
     }
+
     {% elif injection_value == 'property'  %}
     @Autowired
     private {{ entity_name_pascalcase}}Repository {{entity_name}}Repository;
+
+    @Autowired
+    private {{entity_name_pascalcase}}To{{entity_name_dto_pascalcase}}Converter {{entity_name}}To{{entity_name_dto_pascalcase}}Converter;
+
+    @Autowired
+    private {{entity_name_dto_pascalcase}}To{{entity_name_pascalcase}}Converter {{entity_name_dto}}To{{entity_name_pascalcase}}Converter;
+
     {% else %}
     {# setter #}
     private {{ entity_name_pascalcase}}Repository {{entity_name}}Repository;
 
-    public void set{{entity_name_pascalcase}}Repository({{entity_name_pascalcase}}Repository {{entity_name}}Repository) {
-        this.{{entity_name}}Repository = {{entity_name}}Repository;
-    }
-    {% endif %}
-
     private {{entity_name_pascalcase}}To{{entity_name_dto_pascalcase}}Converter {{entity_name}}To{{entity_name_dto_pascalcase}}Converter;
 
     private {{entity_name_dto_pascalcase}}To{{entity_name_pascalcase}}Converter {{entity_name_dto}}To{{entity_name_pascalcase}}Converter;
+
+    public void set{{entity_name_pascalcase}}Repository({{entity_name_pascalcase}}Repository {{entity_name}}Repository) {
+        this.{{entity_name}}Repository = {{entity_name}}Repository;
+    }
+
+    public void set{{entity_name_pascalcase}}To{{entity_name_dto_pascalcase}}Converter({{entity_name_pascalcase}}To{{entity_name_dto_pascalcase}}Converter {{entity_name}}To{{entity_name_dto_pascalcase}}Converter) {
+        this.{{entity_name}}To{{entity_name_dto_pascalcase}}Converter = {{entity_name}}To{{entity_name_dto_pascalcase}}Converter;
+    }
+
+    public void set{{entity_name_dto_pascalcase}}To{{entity_name_pascalcase}}Converter({{entity_name_dto_pascalcase}}To{{entity_name_pascalcase}}Converter {{entity_name_dto}}To{{entity_name_pascalcase}}Converter) {
+        this.{{entity_name_dto}}To{{entity_name_pascalcase}}Converter = {{entity_name_dto}}To{{entity_name_pascalcase}}Converter;
+    }
+
+    {% endif %}
 
     @Override
     public List<{{ entity_name_dto_pascalcase}}> getAll() {
@@ -64,9 +87,11 @@ public class {{ entity_name_pascalcase}}ServiceImpl implements {{ entity_name_pa
     }
 
     @Override
-    public {{ entity_name_pascalcase_dto}} getOne(Long id) {
+    public {{ entity_name_dto_pascalcase}} getOne(Long id) {
         Optional<{{entity_name_pascalcase}}> {{entity_name}} = {{entity_name}}Repository.findById(id);
-        {{ entity_name_dto_pascalcase}} {{entity_name_dto}} = {{entity_name}}To{{entity_name_dto_pascalcase}}Converter.convert({{entity_name}}.get());
+        if({{entity_name}}.isPresent()){
+            {{ entity_name_dto_pascalcase}} {{entity_name_dto}} = {{entity_name}}To{{entity_name_dto_pascalcase}}Converter.convert({{entity_name}}.get());
+        }
         return {{entity_name_dto}};
     }
 
