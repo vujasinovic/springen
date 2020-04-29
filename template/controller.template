@@ -18,6 +18,7 @@ package {{ default_package }}.controller;
 {% if injection | length > 0 %}
     {% set injection_value = injection | first | attr("value") %}
 {% endif %}
+{% set id_param_filter = configs.config_params | selectattr("key", "eq", "idType") | list %}
 {% if id_param_filter | length > 0 %}
     {% set id_type_value = id_param_filter | first | attr("value") %}
 {% endif %}
