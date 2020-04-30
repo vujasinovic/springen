@@ -23,7 +23,7 @@ package base {
 }
 
 config {
-        dependencyInjectionType : 'constructor';
+        dependencyInjectionType : 'setter';
         idType : 'Integer';
         applicationName: 'MyApplication'
 }

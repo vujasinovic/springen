@@ -1,0 +1,37 @@
+{% import 'template/utils.template' as utils %}
+{% set template_name = self | template_name %}
+{% set entity_name_pascalcase = entity.name | to_pascalcase %}
+{% set entity_name = entity.name | to_lowercase %}
+{% set class_name = entity_name_pascalcase ~ 'Dto' %}
+package {{ packagePath }}.dto;
+
+
+public class {{ entity_name_pascalcase }}Dto {
+
+    {% for property in entity.properties%}
+    private {{property.type | javatype}} {{property.name}};
+    {% endfor %}
+
+    public {{ entity_name_pascalcase }}Dto() {
+
+    }
+
+    public {{ entity_name_pascalcase }}Dto({% for property in entity.properties %}{{property.type | javatype }} {{property.name}}{% if property != entity.properties[-1] %},{% endif %}{% endfor %}) {
+    {% for property in entity.properties %}
+        this.{{property.name}} = {{property.name}};
+    {% endfor %}
+    }
+
+    {% for property in entity.properties%}
+
+    public {{property.type | javatype}} get{{property.name | to_pascalcase}}() {
+        return {{property.name}};
+    }
+
+    public void set{{property.name | to_pascalcase}}({{property.type | javatype}} {{property.name}}) {
+        this.{{property.name}} = {{property.name}};
+    }
+
+    {% endfor %}
+}
+
