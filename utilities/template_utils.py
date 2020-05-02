@@ -23,8 +23,8 @@ CONTROLLER_TEMPLATE_FILE = 'template/controller.template'
 DTO_TEMPLATE_FILE = 'template/dto.template'
 CONVERTER_ENTITY_TO_DTO_TEMPLATE_FILE = 'template/converter_entity_to_dto.template'
 CONVERTER_DTO_TO_ENTITY_TEMPLATE_FILE = 'template/converter_dto_to_entity.template'
-NAVBAR_TEMPLATE_FILE = 'template/html/navbar.template'
-ENTITY_BASE_PAGE_TEMPLATE_FILE = 'template/html/entity_base_page.template'
+NAVBAR_TEMPLATE_FILE = 'template/jsp/navbar.template'
+ENTITY_BASE_PAGE_TEMPLATE_FILE = 'template/jsp/entity_base_page.template'
 
 
 def entity_package_path(entity):
@@ -55,6 +55,12 @@ def get_application_name(configs_field):
         return app_name_param.value
     else:
         return default_app_name
+
+
+def get_jsp_metadata():
+    bootstrap_css = 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'
+    bootstrap_js = 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js'
+    return bootstrap_css, bootstrap_js
 
 
 def write_to_file(content, file_name):

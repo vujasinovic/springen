@@ -1,4 +1,4 @@
-{% import 'template/html/html_utils.template' as utils %}
+{% import 'template/jsp/jsp_utils.template' as utils %}
 {{ utils.gen_jsp_directives() }}
 {% set entity_name_plural = entity.name | to_lowercase | to_plural %}
 {% set entity_name = entity.name | to_lowercase %}
@@ -17,30 +17,30 @@
 		    </div>
   		    <div>
 			    <table class="table table-sm table-hover table-bordered text-center mt-3">
-				      <tr>
+				    <tr>
 				        {% for property in entity.properties%}
-                           <th>{{property.name | to_pascalcase}}</th>
+                        <th>{{property.name | to_pascalcase}}</th>
                         {% endfor %}
-			          </tr>
+			        </tr>
 			        <c:forEach items="{{ '${' ~ entity_name_plural ~ '}' }}" var="{{entity_name}}">
-				      <tr>
+				    <tr>
 				        {% for property in entity.properties %}
-				          {% if property.type | is_simple_type %}
-                           <td>{{'${' ~ entity_name ~ '.' ~ property.name | to_lowercase ~ '}'}}</td>
-                          {% else %}
-                           {% set property_plural = property.name | to_lowercase | to_plural %}
-                           {% set property_name = property.name | to_pascalcase %}
-                           {% set property_id = '${' ~ property.name | to_lowercase ~ '.id}' %}
-                           <td><a href="<c:url value="/{{property_plural}}/{{property_id}}"/>">{{property_name}}</a></td>
-                          {% endif %}
+				        {% if property.type | is_simple_type %}
+                        <td>{{'${' ~ entity_name ~ '.' ~ property.name | to_lowercase ~ '}'}}</td>
+                        {% else %}
+                        {% set property_plural = property.name | to_lowercase | to_plural %}
+                        {% set property_name = property.name | to_pascalcase %}
+                        {% set property_id = '${' ~ property.name | to_lowercase ~ '.id}' %}
+                        <td><a href="<c:url value="/{{property_plural}}/{{property_id}}"/>">{{property_name}}</a></td>
+                        {% endif %}
                         {% endfor %}
-					       <td>
+					    <td>
 					        <a class="btn btn-sm btn-info" href="<c:url value="/{{entity_name_plural}}/{{entity_id}}"/>">Detail</a>
 					        <a class="btn btn-sm btn-primary" href="<c:url value="/{{entity_name_plural}}/edit?id={{entity_id}}"/>">Edit</a>
 					        <a class="btn btn-sm btn-danger" href="<c:url value="/{{entity_name_plural}}/delete?id={{entity_id}}"/>">Delete</a>
-				           </td>
-				      </tr>
-			       </c:forEach>
+				        </td>
+				    </tr>
+			        </c:forEach>
 		        </table>
 	        </div>
 	    </div>

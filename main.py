@@ -7,7 +7,8 @@ from config import jinja_configuration
 from const.dot_export import META_MODEL_DOT, MODEL_DOT, DIRECTORY_NAME
 from utilities.classes import SimpleType
 from utilities.jinja_utils import *
-from utilities.template_utils import entity_package_path, get_application_name, write_to_file, get_templates
+from utilities.template_utils import entity_package_path, get_application_name, write_to_file, get_templates, \
+    get_jsp_metadata
 
 GENERATED_APP_DIRECTORY = 'generated_app'
 
@@ -61,7 +62,7 @@ def main():
     controller_directory = create_directory(join(GENERATED_APP_DIRECTORY, "controller"))
     dto_directory = create_directory(join(GENERATED_APP_DIRECTORY, "dto"))
     converter_directory = create_directory(join(GENERATED_APP_DIRECTORY, "converter"))
-    html_directory = create_directory(join(GENERATED_APP_DIRECTORY, "html"))
+    jsp_directory = create_directory(join(GENERATED_APP_DIRECTORY, "jsp"))
 
     templates_dict = get_templates(environment)
 
@@ -72,7 +73,9 @@ def main():
                   join(repository_directory, to_pascalcase(app_name) + 'Repository.java'))
     write_to_file(templates_dict[BASE_REPOSITORY_IMPL_TEMPLATE].render(configs=user_model.configs, app_name=app_name),
                   join(repository_directory, to_pascalcase(app_name) + 'RepositoryImpl.java'))
-    write_to_file(templates_dict[NAVBAR_TEMPLATE].render(), join(html_directory, 'navbar.jsp'))
+    bootstrap_css, bootstrap_js = get_jsp_metadata()
+    write_to_file(templates_dict[NAVBAR_TEMPLATE].render(bootstrap_css=bootstrap_css, bootstrap_js=bootstrap_js),
+                  join(jsp_directory, 'navbar.jsp'))
 
     for entity in user_model.entities:
         packagePath = entity_package_path(entity=entity)
@@ -106,7 +109,7 @@ def main():
             join(converter_directory, '%sDto%sConverter.java' % (entity.name, entity.name)))
         write_to_file(templates_dict[ENTITY_BASE_PAGE_TEMPLATE].render(
             entity=entity, configs=user_model.configs),
-            join(html_directory, '%s.jsp' % plural(to_lowercase(entity.name))))
+            join(jsp_directory, '%s.jsp' % plural(to_lowercase(entity.name))))
 
     directory = create_directory(DIRECTORY_NAME)
     export_models(metamodel, user_model, dot_directory=directory)
