@@ -9,6 +9,8 @@ CONTROLLER_TEMPLATE = 'controller_template'
 DTO_TEMPLATE = 'dto_template'
 CONVERTER_ENTITY_TO_DTO_TEMPLATE = 'converter_entity_to_dto_template'
 CONVERTER_DTO_TO_ENTITY_TEMPLATE = 'converter_dto_to_entity_template'
+NAVBAR_TEMPLATE = 'navbar_template'
+ENTITY_BASE_PAGE_TEMPLATE = 'entity_base_page_template'
 
 BOM_TEMPLATE_FILE = 'template/bom.template'
 BASE_REPOSITORY_TEMPLATE_FILE = 'template/base_repository.template'
@@ -21,6 +23,8 @@ CONTROLLER_TEMPLATE_FILE = 'template/controller.template'
 DTO_TEMPLATE_FILE = 'template/dto.template'
 CONVERTER_ENTITY_TO_DTO_TEMPLATE_FILE = 'template/converter_entity_to_dto.template'
 CONVERTER_DTO_TO_ENTITY_TEMPLATE_FILE = 'template/converter_dto_to_entity.template'
+NAVBAR_TEMPLATE_FILE = 'template/html/navbar.template'
+ENTITY_BASE_PAGE_TEMPLATE_FILE = 'template/html/entity_base_page.template'
 
 
 def entity_package_path(entity):
@@ -65,11 +69,13 @@ def get_templates(jinja_environment):
     repository_template = jinja_environment.get_template(ENTITY_REPOSITORY_TEMPLATE_FILE)
     service_template = jinja_environment.get_template(SERVICE_TEMPLATE_FILE)
     service_implementation_template = jinja_environment.get_template(SERVICE_IMPLEMENTATION_FILE)
-    main_template = jinja_environment.get_template(MAIN_TEMPLATE_FILE);
-    controller_template = jinja_environment.get_template(CONTROLLER_TEMPLATE_FILE);
-    dto_template = jinja_environment.get_template(DTO_TEMPLATE_FILE);
-    converter_entity_to_dto_template = jinja_environment.get_template(CONVERTER_ENTITY_TO_DTO_TEMPLATE_FILE);
-    converter_dto_to_entity_template = jinja_environment.get_template(CONVERTER_DTO_TO_ENTITY_TEMPLATE_FILE);
+    main_template = jinja_environment.get_template(MAIN_TEMPLATE_FILE)
+    controller_template = jinja_environment.get_template(CONTROLLER_TEMPLATE_FILE)
+    dto_template = jinja_environment.get_template(DTO_TEMPLATE_FILE)
+    converter_entity_to_dto_template = jinja_environment.get_template(CONVERTER_ENTITY_TO_DTO_TEMPLATE_FILE)
+    converter_dto_to_entity_template = jinja_environment.get_template(CONVERTER_DTO_TO_ENTITY_TEMPLATE_FILE)
+    navbar_template = jinja_environment.get_template(NAVBAR_TEMPLATE_FILE)
+    entity_base_page_template = jinja_environment.get_template(ENTITY_BASE_PAGE_TEMPLATE_FILE)
 
     templates_dict = {
             BOM_TEMPLATE: bom_template,
@@ -83,6 +89,8 @@ def get_templates(jinja_environment):
             DTO_TEMPLATE: dto_template,
             CONVERTER_ENTITY_TO_DTO_TEMPLATE: converter_entity_to_dto_template,
             CONVERTER_DTO_TO_ENTITY_TEMPLATE: converter_dto_to_entity_template,
+            NAVBAR_TEMPLATE: navbar_template,
+            ENTITY_BASE_PAGE_TEMPLATE: entity_base_page_template
     }
 
     return templates_dict

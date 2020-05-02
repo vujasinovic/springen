@@ -1,3 +1,6 @@
+from utilities.classes import SimpleType
+
+
 def to_pascalcase(st):
     return st[0].upper() + st[1:]
 
@@ -8,6 +11,14 @@ def to_lowercase(st):
 
 def get_last_character(st):
     return st[-1];
+
+
+def plural(st):
+    return st + 'es' if get_last_character(st) == 's' else st + 's'
+
+
+def is_simple_type(obj_type):
+    return isinstance(obj_type, SimpleType)
 
 
 def template_name(template):

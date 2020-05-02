@@ -22,6 +22,8 @@ CONTROLLER_TEMPLATE = 'controller_template'
 DTO_TEMPLATE = 'dto_template'
 CONVERTER_ENTITY_TO_DTO_TEMPLATE = 'converter_entity_to_dto_template'
 CONVERTER_DTO_TO_ENTITY_TEMPLATE = 'converter_dto_to_entity_template'
+NAVBAR_TEMPLATE = 'navbar_template'
+ENTITY_BASE_PAGE_TEMPLATE = 'entity_base_page_template'
 
 this_folder = dirname(__file__)
 
@@ -59,6 +61,7 @@ def main():
     controller_directory = create_directory(join(GENERATED_APP_DIRECTORY, "controller"))
     dto_directory = create_directory(join(GENERATED_APP_DIRECTORY, "dto"))
     converter_directory = create_directory(join(GENERATED_APP_DIRECTORY, "converter"))
+    html_directory = create_directory(join(GENERATED_APP_DIRECTORY, "html"))
 
     templates_dict = get_templates(environment)
 
@@ -69,6 +72,7 @@ def main():
                   join(repository_directory, to_pascalcase(app_name) + 'Repository.java'))
     write_to_file(templates_dict[BASE_REPOSITORY_IMPL_TEMPLATE].render(configs=user_model.configs, app_name=app_name),
                   join(repository_directory, to_pascalcase(app_name) + 'RepositoryImpl.java'))
+    write_to_file(templates_dict[NAVBAR_TEMPLATE].render(), join(html_directory, 'navbar.jsp'))
 
     for entity in user_model.entities:
         packagePath = entity_package_path(entity=entity)
@@ -100,6 +104,9 @@ def main():
         write_to_file(templates_dict[CONVERTER_DTO_TO_ENTITY_TEMPLATE].render(
             entity=entity, packagePath=packagePath, configs=user_model.configs),
             join(converter_directory, '%sDto%sConverter.java' % (entity.name, entity.name)))
+        write_to_file(templates_dict[ENTITY_BASE_PAGE_TEMPLATE].render(
+            entity=entity, configs=user_model.configs),
+            join(html_directory, '%s.jsp' % plural(to_lowercase(entity.name))))
 
     directory = create_directory(DIRECTORY_NAME)
     export_models(metamodel, user_model, dot_directory=directory)
