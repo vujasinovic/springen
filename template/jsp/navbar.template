@@ -1,0 +1,13 @@
+{% import 'template/jsp/jsp_utils.template' as utils %}
+{{ utils.gen_jsp_directives() }}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link type="text/css" rel="stylesheet" href="{{bootstrap_css}}">
+        <script type="text/javascript" src="{{bootstrap_js}}"></script>
+    </head>
+    <body>
+	    <h2>NAVBAR</h2>
+    </body>
+</html>

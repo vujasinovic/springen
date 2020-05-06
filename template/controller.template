@@ -7,13 +7,7 @@ package {{ default_package }}.controller;
 {% set dto_name = entity_name_pascalcase ~ 'Dto'%}
 {% set dto_name_obj = entity_name ~ 'Dto' %}
 {% set class_name = entity_name_pascalcase ~ 'Controller' %}
-{% set last_character_of_entity = entity.name | last_character %}
-{% if last_character_of_entity == 's' %}
-    {% set entity_name_suffix = 'es' %}
-{% else %}
-    {% set entity_name_suffix = 's' %}
-{% endif %}
-{% set entity_name_plural = entity.name | to_lowercase ~ entity_name_suffix | to_lowercase %}
+{% set entity_name_plural = entity.name | to_lowercase | to_plural  %}
 {% set injection = configs.config_params | selectattr("key", "eq","dependencyInjectionType") | list %}
 {% if injection | length > 0 %}
     {% set injection_value = injection | first | attr("value") %}
