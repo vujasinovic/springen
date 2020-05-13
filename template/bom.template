@@ -1,4 +1,4 @@
-package rs.ac.ftn.uns.jsd.foo.bom;
+package {{packagePath}}.bom;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

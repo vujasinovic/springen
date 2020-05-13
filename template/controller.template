@@ -1,6 +1,5 @@
 {% import 'template/utils.template' as utils %}
 {% import 'template/commons/java.template' as java %}
-package {{ default_package }}.controller;
 {% set template_name = self | template_name %}
 {% set entity_name_pascalcase = entity.name | to_pascalcase %}
 {% set entity_name = entity.name | to_lowercase %}
@@ -20,6 +19,7 @@ package {{ default_package }}.controller;
 {% set service_class = entity_name_pascalcase ~ 'Service' %}
 {% set service_obj = entity_name ~ 'Service' %}
 {% set service_class_obj_pair = service_class ~ ' ' ~ service_obj %}
+package {{ packagePath }}.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

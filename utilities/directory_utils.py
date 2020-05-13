@@ -8,6 +8,6 @@ def create_directory(name):
     directory = join(this_folder, name)
 
     if not os.path.exists(directory):
-        os.mkdir(directory)
+        os.makedirs(directory)
 
     return directory
