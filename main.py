@@ -53,7 +53,7 @@ def main():
     app_name = get_application_name(user_model.configs)
 
     bootstrap_css, bootstrap_js = get_jsp_metadata()
-    general_render_args = {"app_name": app_name, "configs": user_model.configs, "bootstrap_css": bootstrap_css, "bootstrap_js": bootstrap_js}
+    general_render_args = {"app_name": app_name, "configs": user_model.configs, "bootstrap_css": bootstrap_css, "bootstrap_js": bootstrap_js, "entities": user_model.entities}
 
     generate(main_directory, templates_dict[MAIN_TEMPLATE], MAIN_TEMPLATE, general_render_args)
     generate(repository_directory, templates_dict[BASE_REPOSITORY_TEMPLATE], BASE_REPOSITORY_TEMPLATE, general_render_args)
