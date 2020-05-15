@@ -5,8 +5,10 @@
 {{ utils.gen_template_metadata(author=author, version=version, time=now, class_name=class_name, template_name=template_name) }}
 package {{ default_package }}.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.NoRepositoryBean;
+import javax.persistence.EntityManager;
+
+import org.springframework.data.jpa.repository.support.JpaEntityInformation;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import {{ default_package }}.repository.{{ app_name_pascalcase }}Repository;
 

@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import {{ default_package }}.converter.{{entity_name_pascalcase}}To{{entity_name_pascalcase}}DtoConverter;
 import {{ default_package }}.converter.{{entity_name_pascalcase}}DtoTo{{entity_name_pascalcase}}Converter;
 import {{ default_package }}.repository.{{ entity_name_pascalcase}}Repository;
-import {{ packagePath }}.model.{{ entity_name_pascalcase}};
+import {{ packagePath }}.bom.{{ entity_name_pascalcase}};
 import {{ packagePath }}.dto.{{ entity_name_dto_pascalcase}};
 
 @Service

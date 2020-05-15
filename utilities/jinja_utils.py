@@ -3,6 +3,7 @@ from os import environ
 import jinja2
 
 from const import javatypes as javatypes
+from const.constants import GENERATED_ROOT_PACKAGE
 from const.simpletypes import *
 from filters.filters import *
 
@@ -45,7 +46,7 @@ def set_globals(jinja_environment):
     jinja_environment.globals['now'] = datetime.datetime.now()
     jinja_environment.globals['author'] = environ.get('username', 'Author')
     jinja_environment.globals['version'] = 1
-    jinja_environment.globals['default_package'] = 'rs.ftn'
+    jinja_environment.globals['default_package'] = GENERATED_ROOT_PACKAGE
 
 
 def set_extensions():

@@ -2,7 +2,7 @@
 {% set entity_name = entity.name | to_lowercase %}
 {% set entity_name_dto_pascalcase = entity_name_pascalcase ~ 'Dto' %}
 {% set entity_name_dto = entity_name ~ 'Dto' %}
-package {{ default_package }}.service;
+package {{ packagePath }}.service;
 
 import java.util.List;
 import {{ packagePath }}.dto.{{ entity_name_dto_pascalcase}};
