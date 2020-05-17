@@ -57,6 +57,10 @@ def entity_base_page(directory, app_name, entity_name):
     return join(directory, '%s.jsp' % plural(to_lowercase(entity_name)))
 
 
+def entity_overview_page(directory, app_name, entity_name):
+    return join(directory, '%s.jsp' % to_lowercase(entity_name))
+
+
 def generate(directory, template, template_name, render_args, entity_name=""):
     switcher = {
         MAIN_TEMPLATE: main,
@@ -71,7 +75,8 @@ def generate(directory, template, template_name, render_args, entity_name=""):
         DTO_TEMPLATE: dto,
         CONVERTER_ENTITY_TO_DTO_TEMPLATE: converter_entity_to_dto,
         CONVERTER_DTO_TO_ENTITY_TEMPLATE: converter_dto_to_entity,
-        ENTITY_BASE_PAGE_TEMPLATE: entity_base_page
+        ENTITY_BASE_PAGE_TEMPLATE: entity_base_page,
+        ENTITY_OVERVIEW_TEMPLATE: entity_overview_page
     }
 
     filename_function = switcher.get(template_name, lambda: "Invalid arg")
