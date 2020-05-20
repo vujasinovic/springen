@@ -1,0 +1,26 @@
+{% import 'template/jsp/jsp_utils.template' as utils %}
+{{ utils.gen_jsp_directives() }}
+{% set entity_name_plural = entity.name | to_lowercase | to_plural %}
+{% set entity_name = entity.name | to_lowercase %}
+{% set entity_id = '${' ~ entity_name ~ '.id}' %}
+{% set opening_curly_brace = '${' %}
+{% set closing_curly_brace = '}' %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>{{ entity_name }}</title>
+    </head>
+    <body>
+	    <%@ include file="navbar.jsp"%>
+	    <div class="container">
+	        <h1> {{ entity_name }} </h1>
+	        {% for property in entity.properties %}
+	            <div class="property">
+	                {{ property.name | to_pascalcase}} : {{ opening_curly_brace }}{{ entity_name }}.{{ property.name | to_lowercase }}{{ closing_curly_brace }}
+	            </div>
+	        {% endfor %}
+	    </div>
+    </body>
+</html>

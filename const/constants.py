@@ -1,5 +1,15 @@
 GENERATED_APP_DIRECTORY = 'generated_app'
 
+SRC = 'src'
+MAIN = 'main'
+
+JAVA = 'java'
+RESOURCES = 'resources'
+WEBAPP = 'webapp'
+
+WEB_INF = 'WEB-INF'
+JSP = 'jsp'
+
 GENERATED_ROOT_PACKAGE = 'rs.ftn'
 
 DEFAULT_APP_NAME = 'demo'
@@ -17,6 +27,7 @@ CONVERTER_ENTITY_TO_DTO_TEMPLATE = 'converter_entity_to_dto_template'
 CONVERTER_DTO_TO_ENTITY_TEMPLATE = 'converter_dto_to_entity_template'
 NAVBAR_TEMPLATE = 'navbar_template'
 ENTITY_BASE_PAGE_TEMPLATE = 'entity_base_page_template'
+ENTITY_OVERVIEW_TEMPLATE = 'entity_overview_template'
 
 BOM_TEMPLATE_FILE = 'template/bom.template'
 BASE_REPOSITORY_TEMPLATE_FILE = 'template/base_repository.template'
@@ -31,3 +42,4 @@ CONVERTER_ENTITY_TO_DTO_TEMPLATE_FILE = 'template/converter_entity_to_dto.templa
 CONVERTER_DTO_TO_ENTITY_TEMPLATE_FILE = 'template/converter_dto_to_entity.template'
 NAVBAR_TEMPLATE_FILE = 'template/jsp/navbar.template'
 ENTITY_BASE_PAGE_TEMPLATE_FILE = 'template/jsp/entity_base_page.template'
+ENTITY_OVERVIEW_TEMPLATE_FILE = 'template/jsp/entity_overview.template'
