@@ -57,6 +57,10 @@ def entity_base_page(directory, app_name, entity_name):
     return join(directory, '%s.jsp' % plural(to_lowercase(entity_name)))
 
 
+def form_template(directory, app_name, entity_name):
+    return join(directory, '%s.jsp' % to_lowercase('Form' + entity_name))
+
+
 def entity_overview_page(directory, app_name, entity_name):
     return join(directory, '%s.jsp' % to_lowercase(entity_name))
 
@@ -80,6 +84,8 @@ def generate(directory, template, template_name, render_args, entity_name=""):
         CONVERTER_ENTITY_TO_DTO_TEMPLATE: converter_entity_to_dto,
         CONVERTER_DTO_TO_ENTITY_TEMPLATE: converter_dto_to_entity,
         ENTITY_BASE_PAGE_TEMPLATE: entity_base_page,
+        ENTITY_OVERVIEW_TEMPLATE: entity_overview_page,
+        FORM_TEMPLATE: form_template,
         ENTITY_OVERVIEW_TEMPLATE: entity_overview_page,
         APPLICATION_YML_TEMPLATE: application_yml
     }
