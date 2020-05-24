@@ -40,9 +40,10 @@ def main():
     user_model = metamodel.model_from_file('model/model.ent')
     app_name = get_application_name(user_model.configs)
 
-    bootstrap_css, bootstrap_js = get_jsp_metadata()
-    render_args = {"app_name": app_name, "configs": user_model.configs, "bootstrap_css": bootstrap_css,
-                   "bootstrap_js": bootstrap_js, "entities": user_model.entities}
+    bootstrap_css, bootstrap_js, jquery, datatables_css, datatables_js = get_jsp_metadata()
+    render_args = {"app_name": app_name, "configs": user_model.configs, "entities": user_model.entities,
+                   "bootstrap_css": bootstrap_css, "bootstrap_js": bootstrap_js, "jquery": jquery,
+                   "datatables_css": datatables_css, "datatables_js": datatables_js}
 
     from code_generation.generating_processor import generate_app
     generate_app(render_args, environment, entities=user_model.entities, metamodel=metamodel)
