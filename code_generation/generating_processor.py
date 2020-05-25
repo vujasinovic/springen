@@ -7,12 +7,13 @@ from utilities.template_utils import extract_package_segments, entity_package_pa
 
 
 def generate_app(render_args, environment, entities, metamodel):
-    app_name, package_paths, model_configs = get_metadata(metamodel, 'model/model.ent')
+    app_name, package_paths, model_configs, resource_package_path = get_metadata(metamodel, 'model/model.ent')
 
     templates = get_templates(jinja_environment=environment)
     generate_commons(render_args, templates, package_paths)
 
     jsp_directory = create_directory(join(package_paths.get('webapp'), WEB_INF, JSP))
+    resource_directory = create_directory(join(resource_package_path))
 
     for entity in entities:
         package_path_qname = entity_package_path(entity=entity)
@@ -49,6 +50,7 @@ def generate_app(render_args, environment, entities, metamodel):
         generate(jsp_directory, templates[ENTITY_BASE_PAGE_TEMPLATE], ENTITY_BASE_PAGE_TEMPLATE, render_args,
                  entity_name)
         generate(jsp_directory, templates[ENTITY_OVERVIEW_TEMPLATE], ENTITY_OVERVIEW_TEMPLATE, render_args, entity_name)
+        generate(resource_directory, templates[APPLICATION_YML_TEMPLATE], APPLICATION_YML_TEMPLATE, render_args, entity_name)
 
 
 def get_templates(jinja_environment):
@@ -73,7 +75,8 @@ def get_templates(jinja_environment):
         CONVERTER_DTO_TO_ENTITY_TEMPLATE: jinja_environment.get_template(CONVERTER_DTO_TO_ENTITY_TEMPLATE_FILE),
         NAVBAR_TEMPLATE: jinja_environment.get_template(NAVBAR_TEMPLATE_FILE),
         ENTITY_BASE_PAGE_TEMPLATE: jinja_environment.get_template(ENTITY_BASE_PAGE_TEMPLATE_FILE),
-        ENTITY_OVERVIEW_TEMPLATE: jinja_environment.get_template(ENTITY_OVERVIEW_TEMPLATE_FILE)
+        ENTITY_OVERVIEW_TEMPLATE: jinja_environment.get_template(ENTITY_OVERVIEW_TEMPLATE_FILE),
+        APPLICATION_YML_TEMPLATE: jinja_environment.get_template(APPLICATION_YML_TEMPLATE_FILE)
     }
 
     return templates
@@ -106,7 +109,7 @@ def get_metadata(metamodel, model_path):
 
     model_configs = user_model.configs
 
-    return app_name, package_paths, model_configs
+    return app_name, package_paths, model_configs, resources_package_path
 
 
 def generate_commons(render_args, templates, package_paths):
