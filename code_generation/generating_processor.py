@@ -13,7 +13,6 @@ def generate_app(render_args, environment, entities, metamodel):
     generate_commons(render_args, templates, package_paths)
 
     jsp_directory = create_directory(join(package_paths.get('webapp'), WEB_INF, JSP))
-    resource_directory = create_directory(join(package_paths.get('resources')))
 
     for entity in entities:
         package_path_qname = entity_package_path(entity=entity)
