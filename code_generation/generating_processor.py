@@ -13,7 +13,7 @@ def generate_app(render_args, environment, entities, metamodel):
     generate_commons(render_args, templates, package_paths)
 
     jsp_directory = create_directory(join(package_paths.get('webapp'), WEB_INF, JSP))
-    resource_directory = create_directory(join(resource_package_path))
+    resource_directory = create_directory(join(package_paths.get('resources')))
 
     for entity in entities:
         package_path_qname = entity_package_path(entity=entity)
@@ -50,7 +50,7 @@ def generate_app(render_args, environment, entities, metamodel):
         generate(jsp_directory, templates[ENTITY_BASE_PAGE_TEMPLATE], ENTITY_BASE_PAGE_TEMPLATE, render_args,
                  entity_name)
         generate(jsp_directory, templates[ENTITY_OVERVIEW_TEMPLATE], ENTITY_OVERVIEW_TEMPLATE, render_args, entity_name)
-        generate(resource_directory, templates[APPLICATION_YML_TEMPLATE], APPLICATION_YML_TEMPLATE, render_args, entity_name)
+
 
 
 def get_templates(jinja_environment):
@@ -124,8 +124,10 @@ def generate_commons(render_args, templates, package_paths):
     main_directory = create_directory(package_paths.get('java'))
     repository_directory = create_directory(join(package_paths.get('java'), 'repository'))
     jsp_directory = create_directory(join(package_paths.get('webapp'), WEB_INF, JSP))
+    resource_directory = create_directory(join(package_paths.get('resources')))
 
     generate(main_directory, templates[MAIN_TEMPLATE], MAIN_TEMPLATE, render_args)
     generate(repository_directory, templates[BASE_REPOSITORY_TEMPLATE], BASE_REPOSITORY_TEMPLATE, render_args)
     generate(repository_directory, templates[BASE_REPOSITORY_IMPL_TEMPLATE], BASE_REPOSITORY_IMPL_TEMPLATE, render_args)
     generate(jsp_directory, templates[NAVBAR_TEMPLATE], NAVBAR_TEMPLATE, render_args)
+    generate(resource_directory, templates[APPLICATION_YML_TEMPLATE], APPLICATION_YML_TEMPLATE, render_args)
