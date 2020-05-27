@@ -36,7 +36,6 @@
 {% endif %}
 server:
   port: {{ port_value }}
-  # since v2.0 servlet added; problem with exporting war to external tomcat
   servlet:
     contextPath: {{ contextPath_value }}
 spring:
@@ -55,9 +54,6 @@ spring:
     password: {{ dataSourcePassword_value }}
     sql-script-encoding: UTF-8
     initialization-mode: always
-    tomcat:
-      test-while-idle: true
-      validation-query: SELECT 1
 {% if dataSource_value == "h2" %}
   h2:
     console:
