@@ -25,5 +25,13 @@ package base {
 config {
         dependencyInjectionType : 'setter';
         idType : 'Integer';
-        applicationName: 'MyApplication'
+        applicationName: 'MyApplication';
+        serverPort: '8081';
+        contextPath: '/myapp';
+        dataSource: 'h2';
+        dataSourceUrl: 'jdbc:h2:mem:db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE';
+        dataSourceUsername: 'sa';
+        dataSourcePassword: 'sa';
+        hibernateDialect: 'org.hibernate.dialect.H2Dialect';
+        driverClassName: 'org.h2.Driver'
 }

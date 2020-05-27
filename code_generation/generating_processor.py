@@ -7,7 +7,7 @@ from utilities.template_utils import extract_package_segments, entity_package_pa
 
 
 def generate_app(render_args, environment, entities, metamodel):
-    app_name, package_paths, model_configs = get_metadata(metamodel, 'model/model.ent')
+    app_name, package_paths, model_configs, resource_package_path = get_metadata(metamodel, 'model/model.ent')
 
     templates = get_templates(jinja_environment=environment)
     generate_commons(render_args, templates, package_paths)
@@ -51,6 +51,7 @@ def generate_app(render_args, environment, entities, metamodel):
         generate(jsp_directory, templates[ENTITY_OVERVIEW_TEMPLATE], ENTITY_OVERVIEW_TEMPLATE, render_args, entity_name)
 
 
+
 def get_templates(jinja_environment):
     """
     Register your new templates here
@@ -73,7 +74,8 @@ def get_templates(jinja_environment):
         CONVERTER_DTO_TO_ENTITY_TEMPLATE: jinja_environment.get_template(CONVERTER_DTO_TO_ENTITY_TEMPLATE_FILE),
         NAVBAR_TEMPLATE: jinja_environment.get_template(NAVBAR_TEMPLATE_FILE),
         ENTITY_BASE_PAGE_TEMPLATE: jinja_environment.get_template(ENTITY_BASE_PAGE_TEMPLATE_FILE),
-        ENTITY_OVERVIEW_TEMPLATE: jinja_environment.get_template(ENTITY_OVERVIEW_TEMPLATE_FILE)
+        ENTITY_OVERVIEW_TEMPLATE: jinja_environment.get_template(ENTITY_OVERVIEW_TEMPLATE_FILE),
+        APPLICATION_YML_TEMPLATE: jinja_environment.get_template(APPLICATION_YML_TEMPLATE_FILE)
     }
 
     return templates
@@ -106,7 +108,7 @@ def get_metadata(metamodel, model_path):
 
     model_configs = user_model.configs
 
-    return app_name, package_paths, model_configs
+    return app_name, package_paths, model_configs, resources_package_path
 
 
 def generate_commons(render_args, templates, package_paths):
@@ -121,8 +123,10 @@ def generate_commons(render_args, templates, package_paths):
     main_directory = create_directory(package_paths.get('java'))
     repository_directory = create_directory(join(package_paths.get('java'), 'repository'))
     jsp_directory = create_directory(join(package_paths.get('webapp'), WEB_INF, JSP))
+    resource_directory = create_directory(join(package_paths.get('resources')))
 
     generate(main_directory, templates[MAIN_TEMPLATE], MAIN_TEMPLATE, render_args)
     generate(repository_directory, templates[BASE_REPOSITORY_TEMPLATE], BASE_REPOSITORY_TEMPLATE, render_args)
     generate(repository_directory, templates[BASE_REPOSITORY_IMPL_TEMPLATE], BASE_REPOSITORY_IMPL_TEMPLATE, render_args)
     generate(jsp_directory, templates[NAVBAR_TEMPLATE], NAVBAR_TEMPLATE, render_args)
+    generate(resource_directory, templates[APPLICATION_YML_TEMPLATE], APPLICATION_YML_TEMPLATE, render_args)

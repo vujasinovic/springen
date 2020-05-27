@@ -1,0 +1,74 @@
+{% set port = configs.config_params | selectattr("key", "eq","serverPort") | list %}
+{% if port | length > 0 %}
+    {% set port_value = port | first | attr("value") %}
+{% endif %}
+{% set contextPath = configs.config_params | selectattr("key", "eq","contextPath") | list %}
+{% if contextPath | length > 0 %}
+    {% set contextPath_value = contextPath | first | attr("value") %}
+{% endif %}
+{% set dataSource = configs.config_params | selectattr("key", "eq","dataSource") | list %}
+{% if dataSource | length > 0 %}
+    {% set dataSource_value = dataSource | first | attr("value") %}
+{% endif %}
+{% set dataSourceUrl = configs.config_params | selectattr("key", "eq","dataSourceUrl") | list %}
+{% if dataSourceUrl | length > 0 %}
+    {% set dataSourceUrl_value = dataSourceUrl | first | attr("value") %}
+{% endif %}
+{% set dataSourceUsername = configs.config_params | selectattr("key", "eq","dataSourceUsername") | list %}
+{% if dataSourceUsername | length > 0 %}
+    {% set dataSourceUsername_value = dataSourceUsername | first | attr("value") %}
+{% endif %}
+{% set dataSourcePassword = configs.config_params | selectattr("key", "eq","dataSourcePassword") | list %}
+{% if dataSourcePassword | length > 0 %}
+    {% set dataSourcePassword_value = dataSourcePassword | first | attr("value") %}
+{% endif %}
+{% set hibernateDialect = configs.config_params | selectattr("key", "eq","hibernateDialect") | list %}
+{% if hibernateDialect | length > 0 %}
+    {% set hibernateDialect_value = hibernateDialect | first | attr("value") %}
+{% endif %}
+{% set driverClassName = configs.config_params | selectattr("key", "eq","driverClassName") | list %}
+{% if driverClassName | length > 0 %}
+    {% set driverClassName_value = driverClassName | first | attr("value") %}
+{% endif %}
+{% set applicationName = configs.config_params | selectattr("key", "eq","applicationName") | list %}
+{% if applicationName | length > 0 %}
+    {% set applicationName_value = applicationName | first | attr("value") %}
+{% endif %}
+server:
+  port: {{ port_value }}
+  servlet:
+    contextPath: {{ contextPath_value }}
+spring:
+  application:
+    name: {{ applicationName_value }}
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+  datasource:
+{% if dataSource_value == "h2" or dataSource_value == "mysql" %}
+    driver-class-name: {{ driverClassName_value }}
+{% endif %}
+    url: {{ dataSourceUrl_value }}
+    username: {{ dataSourceUsername_value }}
+    password: {{ dataSourcePassword_value }}
+    sql-script-encoding: UTF-8
+    initialization-mode: always
+{% if dataSource_value == "h2" %}
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+{% endif %}
+  jpa:
+{% if dataSource == "mysql" %}
+    database-platform: org.hibernate.dialect.MySQLDialect
+{% endif %}
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+      nameing:
+        strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      hibernate:
+        dialect: {{ hibernateDialect_value }}
