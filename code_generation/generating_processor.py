@@ -49,7 +49,7 @@ def generate_app(render_args, environment, entities, metamodel):
         generate(jsp_directory, templates[ENTITY_BASE_PAGE_TEMPLATE], ENTITY_BASE_PAGE_TEMPLATE, render_args,
                  entity_name)
         generate(jsp_directory, templates[ENTITY_OVERVIEW_TEMPLATE], ENTITY_OVERVIEW_TEMPLATE, render_args, entity_name)
-
+        generate(jsp_directory, templates[FORM_TEMPLATE], FORM_TEMPLATE, render_args, entity_name)
 
 
 def get_templates(jinja_environment):
@@ -74,6 +74,8 @@ def get_templates(jinja_environment):
         CONVERTER_DTO_TO_ENTITY_TEMPLATE: jinja_environment.get_template(CONVERTER_DTO_TO_ENTITY_TEMPLATE_FILE),
         NAVBAR_TEMPLATE: jinja_environment.get_template(NAVBAR_TEMPLATE_FILE),
         ENTITY_BASE_PAGE_TEMPLATE: jinja_environment.get_template(ENTITY_BASE_PAGE_TEMPLATE_FILE),
+        ENTITY_OVERVIEW_TEMPLATE: jinja_environment.get_template(ENTITY_OVERVIEW_TEMPLATE_FILE),
+        FORM_TEMPLATE: jinja_environment.get_template(FORM_TEMPLATE_FILE),
         ENTITY_OVERVIEW_TEMPLATE: jinja_environment.get_template(ENTITY_OVERVIEW_TEMPLATE_FILE),
         APPLICATION_YML_TEMPLATE: jinja_environment.get_template(APPLICATION_YML_TEMPLATE_FILE)
     }

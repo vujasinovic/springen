@@ -1,0 +1,54 @@
+{% import 'template/jsp/jsp_utils.template' as utils %}
+{{ utils.gen_jsp_directives() }}
+{% set entity_name_plural = entity.name | to_lowercase | to_plural %}
+{% set entity_name = entity.name | to_lowercase %}
+{% set entity_id = '${' ~ entity_name ~ '.id}' %}
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link type="text/css" rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+        <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+        <title>Form for {{entity_name}}</title>
+    </head>
+    <body>
+        <%@ include file="navbar.jsp"%>
+        <div class="container">
+            <form>
+                 <c:forEach items="{{ '${' ~ entity_name_plural ~ '}' }}" var="{{entity_name}}">
+                {% for property in entity.properties %}
+                    <div class="form-group">
+                        <label for="{{ property.name | to_lowercase }}">{{property.name | to_pascalcase}}</label>
+                    {% if property.type | is_simple_type %}
+                    {% if 'string' == property.type | string()  %}
+                        <input type="text" class="form-control" id="{{property.name}}">
+                    {% elif 'long' == property.type | string() %}
+                        <input type="number" class="form-control" id="{{property.name}}">
+                    {% elif 'int' == property.type | string() %}
+                        <input type="number" class="form-control" id="{{property.name}}">
+                    {% elif 'double' == property.type | string() %}
+                        <input type="number" class="form-control" id="{{property.name}}">
+                    {% elif 'float' == property.type | string() %}
+                        <input type="number" class="form-control" id="{{property.name}}">
+                    {% elif 'boolean' == property.type | string() %}
+                        <input type = "checkbox" name = "{{ property.name }}">
+                    {% elif 'date' == property.type | string() %}
+                        <input type = "date" name = "{{ property.name }}">
+                    {% endif %}
+                    {% else %}
+                        {% set property_plural = property.name | to_lowercase | to_plural %}
+                        {% set property_name = property.name | to_pascalcase %}
+                        {% set property_id = '${' ~ property.name | to_lowercase ~ '.id}' %}
+                        <td><a href="<c:url value="/{{property_plural}}/{{property_id}}"/>">{{property_name}}</a></td>
+                    {% endif %}
+                    </div>
+
+                {% endfor %}
+                <button type="submit" class="btn btn-default">Submit</button>
+                </c:forEach>
+            </form>
+        </div>
+    </body>
+</html>
