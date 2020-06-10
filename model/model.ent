@@ -1,6 +1,6 @@
 entity User {
     package -> child
-    id: long
+    id: int
     firstName: string
     lastName: string
     username: string
@@ -10,7 +10,7 @@ entity User {
 }
 
 entity Address {
-    id: long
+    id: int
     street: string
     number: int
     zipCode: int

@@ -50,7 +50,7 @@ def converter_entity_to_dto(directory, app_name, entity_name):
 
 
 def converter_dto_to_entity(directory, app_name, entity_name):
-    return join(directory, '%sDto%sConverter.java' % (entity_name, entity_name))
+    return join(directory, '%sDtoTo%sConverter.java' % (entity_name, entity_name))
 
 
 def entity_base_page(directory, app_name, entity_name):
@@ -58,7 +58,7 @@ def entity_base_page(directory, app_name, entity_name):
 
 
 def form_template(directory, app_name, entity_name):
-    return join(directory, '%s.jsp' % to_lowercase('Form' + entity_name))
+    return join(directory, '%s.jsp' % to_lowercase('create' + entity_name))
 
 
 def entity_overview_page(directory, app_name, entity_name):

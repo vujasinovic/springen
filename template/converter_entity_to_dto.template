@@ -17,6 +17,6 @@ public class {{ entity_name_pascalcase }}To{{ entity_name_pascalcase }}DtoConver
 
     @Override
     public {{ entity_name_pascalcase }}Dto convert({{ entity_name_pascalcase }} {{entity_name}}) {
-        return new {{ entity_name_pascalcase }}Dto({% for property in entity.properties %}{{ entity_name }}.get{{ property.name | to_pascalcase}}(){% if property != entity.properties[-1] %},{% endif %}{% endfor %})
+        return new {{ entity_name_pascalcase }}Dto({% for property in entity.properties %}{{ entity_name }}.get{{ property.name | to_pascalcase}}(){% if property != entity.properties[-1] %},{% endif %}{% endfor %});
     }
 }

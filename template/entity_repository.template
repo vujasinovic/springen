@@ -10,7 +10,6 @@ import {{ default_package }}.repository.{{ app_name_pascalcase }}Repository;
 
 import {{ packagePath }}.bom.{{ entity_name_pascalcase}};
 
-@Repository
 public interface {{ entity_name_pascalcase }}Repository extends {{ app_name_pascalcase }}Repository<{{ entity_name_pascalcase }}> {
 
 }

@@ -6,7 +6,14 @@
 {% if injection | length > 0 %}
     {% set injection_value = injection | first | attr("value") %}
 {% endif %}
+{% set idTypeConfigParam = configs.config_params | config_param("idType") %}
+{% set idType = "Long" %}
+{% if idTypeConfigParam is not none %}
+    {% set idType = idTypeConfigParam.value %}
+{% endif %}
 package {{ packagePath }}.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -17,9 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 {% endif %}
 import org.springframework.stereotype.Service;
 
-import {{ default_package }}.converter.{{entity_name_pascalcase}}To{{entity_name_pascalcase}}DtoConverter;
-import {{ default_package }}.converter.{{entity_name_pascalcase}}DtoTo{{entity_name_pascalcase}}Converter;
-import {{ default_package }}.repository.{{ entity_name_pascalcase}}Repository;
+import {{ packagePath }}.converter.{{entity_name_pascalcase}}To{{entity_name_pascalcase}}DtoConverter;
+import {{ packagePath }}.converter.{{entity_name_pascalcase}}DtoTo{{entity_name_pascalcase}}Converter;
+import {{ packagePath }}.repository.{{ entity_name_pascalcase}}Repository;
 import {{ packagePath }}.bom.{{ entity_name_pascalcase}};
 import {{ packagePath }}.dto.{{ entity_name_dto_pascalcase}};
 
@@ -57,14 +64,17 @@ public class {{ entity_name_pascalcase}}ServiceImpl implements {{ entity_name_pa
 
     private {{entity_name_dto_pascalcase}}To{{entity_name_pascalcase}}Converter {{entity_name_dto}}To{{entity_name_pascalcase}}Converter;
 
+    @Autowired
     public void set{{entity_name_pascalcase}}Repository({{entity_name_pascalcase}}Repository {{entity_name}}Repository) {
         this.{{entity_name}}Repository = {{entity_name}}Repository;
     }
 
+    @Autowired
     public void set{{entity_name_pascalcase}}To{{entity_name_dto_pascalcase}}Converter({{entity_name_pascalcase}}To{{entity_name_dto_pascalcase}}Converter {{entity_name}}To{{entity_name_dto_pascalcase}}Converter) {
         this.{{entity_name}}To{{entity_name_dto_pascalcase}}Converter = {{entity_name}}To{{entity_name_dto_pascalcase}}Converter;
     }
 
+    @Autowired
     public void set{{entity_name_dto_pascalcase}}To{{entity_name_pascalcase}}Converter({{entity_name_dto_pascalcase}}To{{entity_name_pascalcase}}Converter {{entity_name_dto}}To{{entity_name_pascalcase}}Converter) {
         this.{{entity_name_dto}}To{{entity_name_pascalcase}}Converter = {{entity_name_dto}}To{{entity_name_pascalcase}}Converter;
     }
@@ -87,24 +97,25 @@ public class {{ entity_name_pascalcase}}ServiceImpl implements {{ entity_name_pa
     }
 
     @Override
-    public {{ entity_name_dto_pascalcase}} getOne(Long id) {
+    public {{ entity_name_dto_pascalcase}} getOne({{idType}} id) {
         Optional<{{entity_name_pascalcase}}> {{entity_name}} = {{entity_name}}Repository.findById(id);
+        {{ entity_name_dto_pascalcase}} {{entity_name_dto}} = null;
         if({{entity_name}}.isPresent()){
-            {{ entity_name_dto_pascalcase}} {{entity_name_dto}} = {{entity_name}}To{{entity_name_dto_pascalcase}}Converter.convert({{entity_name}}.get());
+            {{entity_name_dto}} = {{entity_name}}To{{entity_name_dto_pascalcase}}Converter.convert({{entity_name}}.get());
         }
         return {{entity_name_dto}};
     }
 
     @Override
     public void delete({{entity_name_dto_pascalcase}} {{entity_name_dto}}) {
-        {{ entity_name_pascalcase}} {{entity_name}} = {{entity_name_dto}}To{{entity_name_pascalcase}}.convert({{entity_name_dto}});
+        {{ entity_name_pascalcase}} {{entity_name}} = {{entity_name_dto}}To{{entity_name_pascalcase}}Converter.convert({{entity_name_dto}});
         if({{entity_name}} != null) {
             {{entity_name}}Repository.delete({{entity_name}});
         }
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById({{idType}} id) {
         {{entity_name}}Repository.deleteById(id);
     }
 
