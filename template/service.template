@@ -3,10 +3,7 @@
 {% set entity_name_dto_pascalcase = entity_name_pascalcase ~ 'Dto' %}
 {% set entity_name_dto = entity_name ~ 'Dto' %}
 {% set idTypeConfigParam = configs.config_params | config_param("idType") %}
-{% set idType = "Long" %}
-{% if idTypeConfigParam is not none %}
-    {% set idType = idTypeConfigParam.value %}
-{% endif %}
+{% set idType = idTypeConfigParam.value | default('Long') %}
 package {{ packagePath }}.service;
 
 import java.util.List;

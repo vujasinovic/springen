@@ -7,10 +7,7 @@
     {% set injection_value = injection | first | attr("value") %}
 {% endif %}
 {% set idTypeConfigParam = configs.config_params | config_param("idType") %}
-{% set idType = "Long" %}
-{% if idTypeConfigParam is not none %}
-    {% set idType = idTypeConfigParam.value %}
-{% endif %}
+{% set idType = idTypeConfigParam.value | default('Long') %}
 package {{ packagePath }}.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
