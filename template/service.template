@@ -2,6 +2,8 @@
 {% set entity_name = entity.name | to_lowercase %}
 {% set entity_name_dto_pascalcase = entity_name_pascalcase ~ 'Dto' %}
 {% set entity_name_dto = entity_name ~ 'Dto' %}
+{% set idTypeConfigParam = configs.config_params | config_param("idType") %}
+{% set idType = idTypeConfigParam.value | default('Long') %}
 package {{ packagePath }}.service;
 
 import java.util.List;
@@ -10,8 +12,8 @@ import {{ packagePath }}.dto.{{ entity_name_dto_pascalcase}};
 public interface {{ entity_name_pascalcase}}Service {
     List<{{ entity_name_dto_pascalcase }}> getAll();
     {{ entity_name_dto_pascalcase }} save({{ entity_name_dto_pascalcase}} {{ entity_name_dto}});
-    {{ entity_name_dto_pascalcase }} getOne(Long id);
+    {{ entity_name_dto_pascalcase }} getOne({{idType}} id);
     void delete({{ entity_name_dto_pascalcase}} {{ entity_name_dto}});
-    void deleteById(Long id);
+    void deleteById({{idType}} id);
 
 }

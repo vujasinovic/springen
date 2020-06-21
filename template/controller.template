@@ -21,8 +21,17 @@
 {% set service_class_obj_pair = service_class ~ ' ' ~ service_obj %}
 package {{ packagePath }}.controller;
 
+import {{ packagePath }}.service.{{ service_class}};
+import {{ packagePath }}.dto.{{ dto_name}};
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,7 +42,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 {{ java.public_modifier }} class {{ class_name }} {
     {{ java.field_definition(java.private_modifier, 'String', 'BASE_PAGE', True, True) }} = "{{ entity_name_plural }}";
     {{ java.field_definition(java.private_modifier, 'String', 'FORM_PAGE', True, True) }} = "create{{ entity_name_pascalcase }}";
-    {{ java.field_definition(java.private_modifier, 'String', 'OVERVIEW_PAGE', True, True) }} = "{{ entity_name }}Overview";
+    {{ java.field_definition(java.private_modifier, 'String', 'OVERVIEW_PAGE', True, True) }} = "{{ entity_name }}";
 
     {% if injection_value == 'constructor' %}
     {{ java.field_definition(java.private_modifier, service_class, service_obj, is_final=True) }};
@@ -42,12 +51,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
         this.{{ service_obj }} = {{ service_obj }};
     }
     {% elif injection_value == 'property'  %}
-    @Autowired
     {{ java.field_definition(modifier=private_modifier, field_name=entity_name) }}
     {% else %}
 
-    {{ java.field_definition(java.private_modifier, service_class, service_obj)}}
+    {{ java.field_definition(java.private_modifier, service_class, service_obj)}};
 
+    @Autowired
     public void set{{ service_class }}({{ service_class_obj_pair }}) {
         this.{{ service_obj }} = {{ service_obj }};
     }
@@ -76,11 +85,11 @@ import org.springframework.web.bind.annotation.DeleteMapping;
     public String createOrUpdate{{ entity_name_pascalcase }}(final @ModelAttribute("{{ entity_name }}") {{ dto_name }} {{ dto_name_obj }}) {
         {{ service_obj }}.save({{ dto_name_obj }});
 
-        return "redirect:/all"
+        return "redirect:/all";
     }
 
     @GetMapping("/edit")
-    public String edit{{ entity_name_pascalcase }}(@RequestParam("id") {{ id_type_value | default('Long') }} id, Model model {
+    public String edit{{ entity_name_pascalcase }}(@RequestParam("id") {{ id_type_value | default('Long') }} id, Model model) {
         final {{ dto_name }} {{ dto_name_obj }} = {{ service_obj }}.getOne(id);
         model.addAttribute("{{ entity_name }}", {{ dto_name_obj }});
 

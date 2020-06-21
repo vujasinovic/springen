@@ -45,7 +45,7 @@ def get_application_name(configs_field):
 def get_jsp_metadata():
     bootstrap_css = 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'
     bootstrap_js = 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js'
-    jquery = 'jquery-3.5.1.min.js'
+    jquery = 'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'
     datatables_css = 'https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css'
     datatables_js = 'https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js'
     return bootstrap_css, bootstrap_js, jquery, datatables_css, datatables_js

@@ -1,9 +1,8 @@
 {% import 'template/jsp/jsp_utils.template' as utils %}
-{{ utils.gen_jsp_directives() }}
 {% set entity_name_plural = entity.name | to_lowercase | to_plural %}
 {% set entity_name = entity.name | to_lowercase %}
 {% set entity_id = '${' ~ entity_name ~ '.id}' %}
-{% set table_id = '#table_id' %}
+{% set table_id = 'table_id' %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,23 +13,18 @@
     	<%@ include file="navbar.jsp"%>
         <script>
 	        $(document).ready( function () {
-    	        var table = $('{{table_id}}').DataTable(
+    	        var table = $('#{{table_id}}').DataTable(
     			    {
     		            responsive: true
     		        }
     	        );
 
-    	        $('{{table_id}} tbody').on('click', 'tr', function () {
-                    var data = table.row(this).data();
-                    var {{entity_name}}_id = data[0];
-                    $(location).attr('href','{{entity_name_plural}}/' + {{entity_name}}_id);
-                } );
 	        } );
         </script>
 	    <div class="container">
 	        <h5 class="text-center">List of {{entity_name_plural}}</h5>
 	        <div>
-			    <a class="btn btn-outline-primary btn-sm float-right" href="<c:url value="/{{entity_name_plural}}"/>">Add new {{entity_name}}</a>
+			    <a class="btn btn-outline-primary btn-sm float-right mb-3" href="<c:url value="/{{entity_name_plural}}"/>">Add new {{entity_name}}</a>
 		    </div>
   		    <div>
 			    <table id="{{table_id}}" class="table table-sm table-hover table-bordered text-center mt-3">
@@ -39,6 +33,7 @@
 				            {% for property in entity.properties%}
                             <th>{{property.name | to_pascalcase}}</th>
                             {% endfor %}
+                            <th>Action</th>
 			            </tr>
 			        </thead>
 			        <tbody>
@@ -50,7 +45,7 @@
                             {% else %}
                             {% set property_plural = property.name | to_lowercase | to_plural %}
                             {% set property_name = property.name | to_pascalcase %}
-                            {% set property_id = '${' ~ property.name | to_lowercase ~ '.id}' %}
+                            {% set property_id = '${' ~ entity_name ~ '.' ~ property.name | to_lowercase ~ '.id}' %}
                             <td><a href="<c:url value="/{{property_plural}}/{{property_id}}"/>">{{property_name}}</a></td>
                             {% endif %}
                             {% endfor %}
