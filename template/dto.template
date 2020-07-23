@@ -5,6 +5,12 @@
 {% set class_name = entity_name_pascalcase ~ 'Dto' %}
 package {{ packagePath }}.dto;
 
+{% for property in entity.properties%}
+{% if not property.type | is_simple_type %}
+{% set entityName = property.type | javatype %}
+import {{entities_packages_dict[entityName]}}.bom.{{property.type | javatype}};
+{% endif %}
+{% endfor %}
 
 public class {{ entity_name_pascalcase }}Dto {
 

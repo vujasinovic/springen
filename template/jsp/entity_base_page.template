@@ -18,7 +18,6 @@
     		            responsive: true
     		        }
     	        );
-
 	        } );
         </script>
 	    <div class="container">
@@ -46,7 +45,7 @@
                             {% set property_plural = property.name | to_lowercase | to_plural %}
                             {% set property_name = property.name | to_pascalcase %}
                             {% set property_id = '${' ~ entity_name ~ '.' ~ property.name | to_lowercase ~ '.id}' %}
-                            <td><a href="<c:url value="/{{property_plural}}/{{property_id}}"/>">{{property_name}}</a></td>
+                            <td><a href="<c:url value="/{{property_plural}}/{{property_id}}"/>">{{property_name}} {{property_id}}</a></td>
                             {% endif %}
                             {% endfor %}
 					        <td>

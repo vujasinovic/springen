@@ -14,6 +14,8 @@ def generate_app(render_args, environment, entities, metamodel):
 
     jsp_directory = create_directory(join(package_paths.get('webapp'), WEB_INF, JSP))
 
+    entities_packages_dict = find_imports(entities)
+
     for entity in entities:
         package_path_qname = entity_package_path(entity=entity)
         package_path_segments = extract_package_segments(package_path_qname)
@@ -23,7 +25,8 @@ def generate_app(render_args, environment, entities, metamodel):
             "entity": entity,
             "packagePath": package_path_qname,
             "app_name": app_name,
-            "configs": model_configs
+            "configs": model_configs,
+            "entities_packages_dict": entities_packages_dict
         }
         entity_name = entity.name
 
@@ -50,6 +53,20 @@ def generate_app(render_args, environment, entities, metamodel):
                  entity_name)
         generate(jsp_directory, templates[ENTITY_OVERVIEW_TEMPLATE], ENTITY_OVERVIEW_TEMPLATE, render_args, entity_name)
         generate(jsp_directory, templates[FORM_TEMPLATE], FORM_TEMPLATE, render_args, entity_name)
+
+
+def find_imports(entities):
+    """
+    Create dictionary where key is entity name and value is its' full qualified package path
+
+    :param entities: entities extracted from the model
+    :return: entities packages dictionary
+    """
+    entities_packages_dict = {}
+    for entity in entities:
+        package_path_qname = entity_package_path(entity=entity)
+        entities_packages_dict[entity.name] = package_path_qname
+    return entities_packages_dict
 
 
 def get_templates(jinja_environment):

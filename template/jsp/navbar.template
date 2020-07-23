@@ -21,22 +21,22 @@
         <div class="collapse navbar-collapse" id="navbarNav">
 	        <ul class="nav navbar-nav">
 	            {% for entity in entities %}
-	                <li class="nav-item">
-	                    <a class="nav-link" href="/{{entity.name | to_lowercase}}">{{entity.name}}</a>
-	                </li>
+	            <li class="nav-item">
+	                <c:url var="{{entity.name | to_lowercase}}_all" value="/{{entity.name | to_lowercase | to_plural}}/all" />
+	                {% set entity_name = '${' ~ entity.name | to_lowercase ~ '_all}' %}
+                    <a class="nav-link" href="{{entity_name}}">{{entity.name}}</a>
+	            </li>
 	            {% endfor %}
 	        </ul>
 	        <ul class="nav navbar-nav ml-auto">
-	                <li class="nav-item">
-	                    <a class="nav-link" href="/logout"> Logout </a>
-	                </li>
-	                <li class="nav-item">
-	                    <a class="nav-link" href="/login"> Login </a>
-	                </li>
+	            <li class="nav-item">
+	                <a class="nav-link" href="/logout"> Logout </a>
+	            </li>
+	            <li class="nav-item">
+	                <a class="nav-link" href="/login"> Login </a>
+	            </li>
 	        </ul>
 	    </div>
-
-
 	   </nav>
     </body>
 </html>
