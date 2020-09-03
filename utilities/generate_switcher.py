@@ -8,6 +8,8 @@ from utilities.template_utils import write_to_file
 def main(directory, app_name, entity_name):
     return join(directory, to_pascalcase(app_name) + 'Application.java')
 
+def pom(directory, app_name, entity_name):
+    return join(directory, 'pom.xml')
 
 def base_repository(directory, app_name, entity_name):
     return join(directory, to_pascalcase(app_name) + 'Repository.java')
@@ -72,6 +74,7 @@ def application_yml(directory, app_name, entity_name):
 def generate(directory, template, template_name, render_args, entity_name=""):
     switcher = {
         MAIN_TEMPLATE: main,
+        POM_TEMPLATE: pom,
         BASE_REPOSITORY_TEMPLATE: base_repository,
         BASE_REPOSITORY_IMPL_TEMPLATE: base_repository_impl,
         NAVBAR_TEMPLATE: navbar,

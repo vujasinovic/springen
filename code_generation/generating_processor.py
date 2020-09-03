@@ -2,19 +2,20 @@ from os.path import join
 
 from const.constants import *
 from utilities.directory_utils import create_directory
+from utilities.entity_parser import parse_entities
 from utilities.generate_switcher import generate
 from utilities.template_utils import extract_package_segments, entity_package_path, get_application_name
 
 
 def generate_app(render_args, environment, entities, metamodel):
-    app_name, package_paths, model_configs, resource_package_path = get_metadata(metamodel, 'model/model.ent')
+    app_name, package_paths, model_configs, resource_package_path, base = get_metadata(metamodel, 'model/model.ent')
 
     templates = get_templates(jinja_environment=environment)
     generate_commons(render_args, templates, package_paths)
 
     jsp_directory = create_directory(join(package_paths.get('webapp'), WEB_INF, JSP))
 
-    for entity in entities:
+    for entity in parse_entities(entities):
         package_path_qname = entity_package_path(entity=entity)
         package_path_segments = extract_package_segments(package_path_qname)
         java_package_path = join(package_paths.get('root'), JAVA, *package_path_segments)
@@ -68,6 +69,7 @@ def get_templates(jinja_environment):
         SERVICE_TEMPLATE: jinja_environment.get_template(SERVICE_TEMPLATE_FILE),
         SERVICE_IMPLEMENTATION_TEMPLATE: jinja_environment.get_template(SERVICE_IMPLEMENTATION_FILE),
         MAIN_TEMPLATE: jinja_environment.get_template(MAIN_TEMPLATE_FILE),
+        POM_TEMPLATE: jinja_environment.get_template(POM_TEMPLATE_FILE),
         CONTROLLER_TEMPLATE: jinja_environment.get_template(CONTROLLER_TEMPLATE_FILE),
         DTO_TEMPLATE: jinja_environment.get_template(DTO_TEMPLATE_FILE),
         CONVERTER_ENTITY_TO_DTO_TEMPLATE: jinja_environment.get_template(CONVERTER_ENTITY_TO_DTO_TEMPLATE_FILE),
@@ -105,12 +107,13 @@ def get_metadata(metamodel, model_path):
         'root': root,
         'java': java_package_path,
         'resources': resources_package_path,
-        'webapp': webapp_package_path
+        'webapp': webapp_package_path,
+        'base': GENERATED_APP_DIRECTORY
     }
 
     model_configs = user_model.configs
 
-    return app_name, package_paths, model_configs, resources_package_path
+    return app_name, package_paths, model_configs, resources_package_path, GENERATED_APP_DIRECTORY
 
 
 def generate_commons(render_args, templates, package_paths):
@@ -126,7 +129,9 @@ def generate_commons(render_args, templates, package_paths):
     repository_directory = create_directory(join(package_paths.get('java'), 'repository'))
     jsp_directory = create_directory(join(package_paths.get('webapp'), WEB_INF, JSP))
     resource_directory = create_directory(join(package_paths.get('resources')))
+    base_directory = create_directory(join(package_paths.get('base')))
 
+    generate(base_directory, templates[POM_TEMPLATE], POM_TEMPLATE, render_args)
     generate(main_directory, templates[MAIN_TEMPLATE], MAIN_TEMPLATE, render_args)
     generate(repository_directory, templates[BASE_REPOSITORY_TEMPLATE], BASE_REPOSITORY_TEMPLATE, render_args)
     generate(repository_directory, templates[BASE_REPOSITORY_IMPL_TEMPLATE], BASE_REPOSITORY_IMPL_TEMPLATE, render_args)

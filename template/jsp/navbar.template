@@ -22,7 +22,7 @@
 	        <ul class="nav navbar-nav">
 	            {% for entity in entities %}
 	                <li class="nav-item">
-	                    <a class="nav-link" href="/{{entity.name | to_lowercase}}">{{entity.name}}</a>
+	                    <a class="nav-link" href="/{{entity.name | to_plural | to_lowercase}}/all">{{entity.name}}</a>
 	                </li>
 	            {% endfor %}
 	        </ul>

@@ -33,7 +33,23 @@ Entity:
 ;
 
 Property:
+    BaseProperty | ListProperty | DisplayProperty
+;
+
+BaseProperty:
     name = ID ':' type = [Type]
+;
+
+ListProperty:
+    'list' name = ID ':' type = [Type]
+;
+
+DisplayProperty:
+    'display' name = ID ':' type = [Type]
+;
+
+Flag:
+    name = ID
 ;
 
 Type:

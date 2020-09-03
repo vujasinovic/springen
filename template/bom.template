@@ -1,10 +1,8 @@
 package {{packagePath}}.bom;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import java.util.*;
 
 @Entity
 @Table(name = "{{entity.name}}")
@@ -13,19 +11,21 @@ public class {{entity.name}} {
     {%if property.name == 'id'%}
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private {{property.type | javatype}} {{property.name}};
-
-    {%else%}
-    private {{property.type | javatype}} {{property.name}};
-
     {% endif %}
+    {% if property.list %}
+    @OneToMany(mappedBy = "{{ property.mapped_by.name }}")
+    {% elif property.type.is_user_type %}
+    @ManyToOne
+    {% endif %}
+    private {{property | declaration }};
+
     {% endfor %}
     {% for property in entity.properties%}
-    public {{property.type | javatype}} get{{property.name | to_pascalcase}}() {
+    public {{property | javatype}} get{{property.name | to_pascalcase}}() {
         return {{property.name}};
     }
 
-    public void set{{property.name | to_pascalcase}}({{property.type | javatype}} {{property.name}}) {
+    public void set{{property.name | to_pascalcase}}({{property | javatype}} {{property.name}}) {
         this.{{property.name}} = {{property.name}};
     }
 

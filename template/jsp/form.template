@@ -16,26 +16,33 @@
     <body>
         <%@ include file="navbar.jsp"%>
         <div class="container">
-            <form>
-                 <c:forEach items="{{ '${' ~ entity_name_plural ~ '}' }}" var="{{entity_name}}">
+            <form:form method="POST" modelAttribute="{{ entity.name | to_lowercase }}" action="/{{ entity.name | to_plural | to_lowercase }}" >
+                <form:hidden path="id" />
                 {% for property in entity.properties %}
+                    {% if not property.list %}
                     <div class="form-group">
                         <label for="{{ property.name | to_lowercase }}">{{property.name | to_pascalcase}}</label>
                     {% if property.type | is_simple_type %}
                     {% if 'string' == property.type | string()  %}
-                        <input type="text" class="form-control" id="{{property.name}}">
+                        <form:input type="text" class="form-control" id="{{property.name}}" path="{{property.name}}" />
                     {% elif 'long' == property.type | string() %}
-                        <input type="number" class="form-control" id="{{property.name}}">
+                        <form:input type="number" class="form-control" id="{{property.name}}" path="{{property.name}}" />
                     {% elif 'int' == property.type | string() %}
-                        <input type="number" class="form-control" id="{{property.name}}">
+                        <form:input type="number" class="form-control" id="{{property.name}}" path="{{property.name}}" {% if property.name == 'id' %} disabled="true" {% endif %} />
                     {% elif 'double' == property.type | string() %}
-                        <input type="number" class="form-control" id="{{property.name}}">
+                        <form:input type="number" class="form-control" id="{{property.name}}" path="{{property.name}}" />
                     {% elif 'float' == property.type | string() %}
-                        <input type="number" class="form-control" id="{{property.name}}">
+                        <form:input type="number" class="form-control" id="{{property.name}}" path="{{property.name}}" />
                     {% elif 'boolean' == property.type | string() %}
-                        <input type = "checkbox" name = "{{ property.name }}">
+                        <form:checkbox name = "{{ property.name }}" id="{{property.name}}" path="{{property.name}}" />
                     {% elif 'date' == property.type | string() %}
-                        <input type = "date" name = "{{ property.name }}">
+                        <form:input type = "date" name = "{{ property.name }}" />
+                    {% elif property.type.is_user_type and not property.list %}
+                         <form:select name="{{ property.name }}.id" id="{{ property.name }}.id" path="{{ property.name }}.id">
+                         <c:forEach var="item" items="${ {{ property.name | to_plural}} }">
+                            <option value="${item.id}" ${ {{ entity.name | to_lowercase }}.{{ property.name }}.id == item.id ? 'selected' : '' }>${item.displayName}</option>
+                         </c:forEach>
+                        </form:select>
                     {% endif %}
                     {% else %}
                         {% set property_plural = property.name | to_lowercase | to_plural %}
@@ -44,11 +51,10 @@
                         <td><a href="<c:url value="/{{property_plural}}/{{property_id}}"/>">{{property_name}}</a></td>
                     {% endif %}
                     </div>
-
+                    {% endif %}
                 {% endfor %}
                 <button type="submit" class="btn btn-default">Submit</button>
-                </c:forEach>
-            </form>
+            </form:form>
         </div>
     </body>
 </html>

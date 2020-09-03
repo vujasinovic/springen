@@ -21,7 +21,7 @@
 {% set service_class_obj_pair = service_class ~ ' ' ~ service_obj %}
 package {{ packagePath }}.controller;
 
-import {{ packagePath }}.service.{{ service_class}};
+import {{ packagePath }}.service.*;
 import {{ packagePath }}.dto.{{ dto_name}};
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,22 +54,36 @@ import org.springframework.web.bind.annotation.DeleteMapping;
     {{ java.field_definition(modifier=private_modifier, field_name=entity_name) }}
     {% else %}
 
-    {{ java.field_definition(java.private_modifier, service_class, service_obj)}};
-
-    @Autowired
-    public void set{{ service_class }}({{ service_class_obj_pair }}) {
-        this.{{ service_obj }} = {{ service_obj }};
-    }
+    {% for property in entity.properties %}
+    {% if property.type.is_user_type %}
+    {% set service_type_name = property.type.name | to_pascalcase ~ 'Service' %}
+    {% set service_field_name = property.type.name | to_lowercase ~ 'Service' %}
+    {{ java.field_definition(java.private_modifier, service_type_name , service_field_name)}};
     {% endif %}
+    {% endfor %}
+    {{ java.field_definition(java.private_modifier, service_class, service_obj)}};
 
     @GetMapping
     public String create{{ entity_name_pascalcase }}(Model model) {
+        {% for property in entity.properties %}
+        {% if property.type.is_user_type %}
+        {% set service_field_name = property.type.name | to_lowercase ~ 'Service' %}
+        model.addAttribute("{{ property.name | to_plural }}", {{ service_field_name }}.getAll());
+        {% endif %}
+        {% endfor %}
         model.addAttribute("{{ entity_name }}", new {{ dto_name }}());
+
         return FORM_PAGE;
     }
 
     @GetMapping("/{id}")
     public String getOverview(@PathVariable("id") {{ id_type_value | default('Long') }} id, Model model) {
+        {% for property in entity.properties %}
+        {% if property.type.is_user_type %}
+        {% set service_field_name = property.type.name | to_lowercase ~ 'Service' %}
+        model.addAttribute("{{ property.name | to_plural }}", {{ service_field_name }}.getAll());
+        {% endif %}
+        {% endfor %}
         model.addAttribute("{{ entity_name }}", {{ service_obj }}.getOne(id));
         return OVERVIEW_PAGE;
     }
@@ -85,22 +99,46 @@ import org.springframework.web.bind.annotation.DeleteMapping;
     public String createOrUpdate{{ entity_name_pascalcase }}(final @ModelAttribute("{{ entity_name }}") {{ dto_name }} {{ dto_name_obj }}) {
         {{ service_obj }}.save({{ dto_name_obj }});
 
-        return "redirect:/all";
+        return "redirect:/{{ entity_name_plural }}/all";
     }
 
     @GetMapping("/edit")
     public String edit{{ entity_name_pascalcase }}(@RequestParam("id") {{ id_type_value | default('Long') }} id, Model model) {
         final {{ dto_name }} {{ dto_name_obj }} = {{ service_obj }}.getOne(id);
+        {% for property in entity.properties %}
+        {% if property.type.is_user_type %}
+        {% set service_field_name = property.type.name | to_lowercase ~ 'Service' %}
+        model.addAttribute("{{ property.name | to_plural }}", {{ service_field_name }}.getAll());
+        {% endif %}
+        {% endfor %}
         model.addAttribute("{{ entity_name }}", {{ dto_name_obj }});
 
         return FORM_PAGE;
     }
 
-    @DeleteMapping
+    @GetMapping("/delete")
     public String delete{{ entity_name_pascalcase }}(@RequestParam("id") {{ id_type_value | default('Long') }} id) {
         {{ service_obj }}.deleteById(id);
 
-        return "redirect:/all";
+        return "redirect:/{{ entity_name_plural }}/all";
     }
+
+    {% for property in entity.properties %}
+    {% if property.type.is_user_type %}
+    {% set service_type_name = property.type.name | to_pascalcase ~ 'Service' %}
+    {% set service_field_name = property.type.name | to_lowercase ~ 'Service' %}
+    @Autowired
+    public void set{{ service_type_name }}({{ service_type_name }} {{ service_field_name }}) {
+        this.{{ service_field_name }} = {{ service_field_name }};
+    }
+    {% endif %}
+    {% endfor %}
+
+    @Autowired
+    public void set{{ service_class }}({{ service_class_obj_pair }}) {
+        this.{{ service_obj }} = {{ service_obj }};
+    }
+    {% endif %}
+
 }
 

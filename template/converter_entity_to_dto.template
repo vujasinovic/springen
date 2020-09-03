@@ -5,18 +5,53 @@
 {% set class_name = entity_name_pascalcase ~ 'Dto' %}
 package {{ packagePath }}.converter;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.core.convert.converter.Converter;
 
 import {{ packagePath }}.bom.{{ entity_name_pascalcase}};
-import {{ packagePath }}.dto.{{ entity_name_pascalcase}}Dto;
+import {{ packagePath }}.dto.*;
 
+import java.util.*;
+
+import static java.util.Objects.nonNull;
+import static java.util.stream.Collectors.toList;
 
 @Component
+@RequiredArgsConstructor
 public class {{ entity_name_pascalcase }}To{{ entity_name_pascalcase }}DtoConverter implements Converter<{{ entity_name_pascalcase }},{{ entity_name_pascalcase }}Dto> {
 
     @Override
     public {{ entity_name_pascalcase }}Dto convert({{ entity_name_pascalcase }} {{entity_name}}) {
-        return new {{ entity_name_pascalcase }}Dto({% for property in entity.properties %}{{ entity_name }}.get{{ property.name | to_pascalcase}}(){% if property != entity.properties[-1] %},{% endif %}{% endfor %});
+
+        {% for property in entity.properties %}
+        {% if property.type.is_user_type %}
+        {% if property.list %}
+        {{ property | to_dto_type }} _{{ property.name | to_dto }} = new ArrayList<>();
+        if(nonNull({{ entity_name }}.{{ property.name | getter }}())) {
+            _{{ property.name | to_dto }} = {{ entity_name }}.{{ property.name | getter }}().stream()
+                .map(_entity -> {
+                    {{ property.type.name | to_dto }} __dto = new {{ property.type.name | to_dto }}();
+                    {% for entityProperty in property.type.properties %}
+                    {% if entityProperty.display or entityProperty.name == 'id' %}
+                    __dto.set{{ entityProperty.name | to_pascalcase }}(_entity.get{{ entityProperty.name | to_pascalcase }}());
+                    {% endif %}
+                    {% endfor %}
+                    return __dto;
+                 })
+                .collect(toList());
+         }
+        {% else %}
+        {{ property | to_dto_type }} _{{ property.name | to_dto }} = new {{ property.type.name | to_dto }}();
+        {% for entityProperty in property.type.properties %}
+        {% if entityProperty.display or entityProperty.name == 'id' %}
+        _{{ property.name | to_dto }}.set{{ entityProperty.name | to_pascalcase }}({{entity_name}}.get{{ property.name | to_pascalcase }}().get{{ entityProperty.name | to_pascalcase }}());
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+
+        return new {{ entity_name_pascalcase }}Dto({% for property in entity.properties %}{% if property.type.is_user_type%}_{{property.name | to_dto}}{% else %}{{entity_name}}.get{{property.name | to_pascalcase}}(){% endif %}{% if property != entity.properties[-1] %}, {% endif %}{% endfor %});
     }
 }

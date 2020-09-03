@@ -13,15 +13,15 @@ this_folder = dirname(__file__)
 
 def get_entity_metamodel():
     simple_types = {
-        BYTE: SimpleType(None, BYTE),
-        SHORT: SimpleType(None, SHORT),
-        INT: SimpleType(None, INT),
-        LONG: SimpleType(None, LONG),
-        FLOAT: SimpleType(None, FLOAT),
-        DOUBLE: SimpleType(None, DOUBLE),
-        BOOLEAN: SimpleType(None, BOOLEAN),
-        CHAR: SimpleType(None, CHAR),
-        STRING: SimpleType(None, STRING)
+        BYTE: SimpleType(BYTE),
+        SHORT: SimpleType(SHORT),
+        INT: SimpleType(INT),
+        LONG: SimpleType(LONG),
+        FLOAT: SimpleType(FLOAT),
+        DOUBLE: SimpleType(DOUBLE),
+        BOOLEAN: SimpleType(BOOLEAN),
+        CHAR: SimpleType(CHAR),
+        STRING: SimpleType(STRING)
     }
     return metamodel_from_file('meta/entity.tx', classes=[SimpleType], builtins=simple_types)
 
