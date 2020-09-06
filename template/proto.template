@@ -1,0 +1,51 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package {{ default_package }};
+
+{% for entity in entities %}
+message {{ entity.name }} {
+  {% for property in entity.properties %}
+  {% if not property.list %}
+      {% if 'string' == property.type | string()  %}
+        {% set protoType = 'string' %}
+      {% elif 'long' == property.type | string() %}
+        {% set protoType = 'int64' %}
+      {% elif 'int' == property.type | string() %}
+        {% set protoType = 'int32' %}
+      {% elif 'double' == property.type | string() %}
+        {% set protoType = 'double' %}
+      {% elif 'float' == property.type | string() %}
+        {% set protoType = 'float' %}
+      {% elif 'boolean' == property.type | string() %}
+        {% set protoType = 'bool' %}
+      {% endif %}
+      {% if property.type.is_user_type %}
+        {% set protoType = 'int32' %}
+      {% endif %}
+      {% if protoType %}
+      {{ protoType }} {{property.name}} = {{ loop.index }};
+      {% endif %}
+  {% endif %}
+  {% endfor %}
+}
+
+{% endfor %}
+
+message Id {
+        int32 id = 1;
+}
+
+message Void {}
+
+{% for entity in entities %}
+service {{ entity.name }}Service {
+  rpc getAll (Void) returns (stream {{ entity.name }});
+
+  rpc save ({{ entity.name }}) returns ({{ entity.name }});
+
+  rpc getOne (Id) returns ({{ entity.name }});
+
+  rpc delete (Id) returns (Void);
+}
+
+{% endfor %}

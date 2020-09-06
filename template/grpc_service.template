@@ -1,0 +1,75 @@
+package rs.ftn.grpc;
+
+import io.grpc.stub.StreamObserver;
+import lombok.RequiredArgsConstructor;
+
+import org.lognet.springboot.grpc.GRpcService;
+import {{ packagePath }}.*;
+import {{ packagePath }}.Void;
+import {{ packagePath }}.dto.*;
+import rs.ftn.service.*;
+
+@GRpcService
+@RequiredArgsConstructor
+public class {{ entity.name }}GrpcService extends {{ entity.name }}ServiceGrpc.{{ entity.name }}ServiceImplBase {
+    private final {{ entity.name }}Service {{ entity.name | to_lowercase }}Service;
+
+    @Override
+    public void getAll(Void request, StreamObserver<{{ entity.name }}> responseObserver) {
+        {{ entity.name | to_lowercase }}Service.getAll().stream()
+                .map(this::convert)
+                .forEach(responseObserver::onNext);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void save({{ entity.name }} request, StreamObserver<{{ entity.name }}> responseObserver) {
+        {{ entity.name }}Dto saved = {{ entity.name | to_lowercase }}Service.save(convert(request));
+        responseObserver.onNext(convert(saved));
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void getOne(Id request, StreamObserver<{{ entity.name }}> responseObserver) {
+        {{ entity.name }}Dto one = {{ entity.name | to_lowercase }}Service.getOne(request.getId());
+        responseObserver.onNext(convert(one));
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void delete(Id request, StreamObserver<Void> responseObserver) {
+        {{ entity.name | to_lowercase }}Service.deleteById(request.getId());
+        responseObserver.onCompleted();
+    }
+
+    private {{ entity.name }} convert({{ entity.name }}Dto dto) {
+        return {{ entity.name }}.newBuilder()
+                {% for property in entity.properties %}
+                {% if not property.list and not property.type.is_user_type %}
+                .set{{ property.name | to_pascalcase }}(dto.get{{ property.name | to_pascalcase}}())
+                {% endif %}
+                {% if not property.list and property.type.is_user_type %}
+                .set{{ property.name | to_pascalcase }}(dto.get{{ property.name | to_pascalcase}}().getId())
+                {% endif %}
+                {% endfor %}
+                .build();
+    }
+
+    private {{ entity.name }}Dto convert({{ entity.name }} model) {
+        {{ entity.name }}Dto dto = new {{ entity.name }}Dto();
+        {% for property in entity.properties %}
+        {% if not property.list and not property.type.is_user_type %}
+        dto.set{{ property.name | to_pascalcase }}(model.get{{ property.name | to_pascalcase}}());
+        {% endif %}
+        {% if not property.list and property.type.is_user_type %}
+
+        {{ property.type.name }}Dto {{property.name}}Dto = new {{ property.type.name }}Dto();
+        {{ property.name }}Dto.setId(model.get{{ property.name | to_pascalcase}}());
+        dto.set{{ property.name | to_pascalcase }}({{ property.name }}Dto);
+
+        {% endif %}
+        {% endfor %}
+        return dto;
+    }
+
+}

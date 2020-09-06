@@ -1,8 +1,15 @@
-entity User {
-    package -> child
+entity Home {
     id: int
-    firstName: string
-    lastName: string
+    display title: string
+    description: string
+    address: Address
+    list users: User
+}
+
+entity User {
+    id: int
+    display firstName: string
+    display lastName: string
     username: string
     password: string
     address: Address
@@ -11,14 +18,26 @@ entity User {
 
 entity Address {
     id: int
-    street: string
-    number: int
+    display street: string
+    display number: int
+    display apartment: int
+    description: string
     zipCode: int
+}
+
+entity Foo {
+    id: int
+    display data: string
+}
+
+entity Bar {
+    id: int
+    display pff: string
+    list fooici: Foo
 }
 
 package base {
     package child {
-
     }
 }
 
@@ -27,7 +46,7 @@ config {
         idType : 'Integer';
         applicationName: 'MyApplication';
         serverPort: '8081';
-        contextPath: '/myapp';
+        contextPath: '/';
         dataSource: 'h2';
         dataSourceUrl: 'jdbc:h2:mem:db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE';
         dataSourceUsername: 'sa';

@@ -10,7 +10,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>{{ entity_name }}</title>
+        <title>{{ entity_name | to_pascalcase }}</title>
     </head>
     <body>
 	    <%@ include file="navbar.jsp"%>

@@ -5,18 +5,19 @@
 {% set class_name = entity_name_pascalcase ~ 'Dto' %}
 package {{ packagePath }}.dto;
 
+import java.util.*;
 
 public class {{ entity_name_pascalcase }}Dto {
 
     {% for property in entity.properties%}
-    private {{property.type | javatype}} {{property.name}};
+    private {{property | to_dto_type }} {{property.name}};
     {% endfor %}
 
     public {{ entity_name_pascalcase }}Dto() {
 
     }
 
-    public {{ entity_name_pascalcase }}Dto({% for property in entity.properties %}{{property.type | javatype }} {{property.name}}{% if property != entity.properties[-1] %},{% endif %}{% endfor %}) {
+    public {{ entity_name_pascalcase }}Dto({% for property in entity.properties %}{{property | to_dto_type }} {{property.name}}{% if property != entity.properties[-1] %},{% endif %}{% endfor %}) {
     {% for property in entity.properties %}
         this.{{property.name}} = {{property.name}};
     {% endfor %}
@@ -24,14 +25,31 @@ public class {{ entity_name_pascalcase }}Dto {
 
     {% for property in entity.properties%}
 
-    public {{property.type | javatype}} get{{property.name | to_pascalcase}}() {
+    public {{property | to_dto_type}} get{{property.name | to_pascalcase}}() {
         return {{property.name}};
     }
 
-    public void set{{property.name | to_pascalcase}}({{property.type | javatype}} {{property.name}}) {
+    public void set{{property.name | to_pascalcase}}({{property | to_dto_type}} {{property.name}}) {
         this.{{property.name}} = {{property.name}};
     }
-
     {% endfor %}
+
+    public String getDisplayName() {
+        String displayName = "";
+
+        {% for property in entity.properties %}
+        {% if property.display %}
+        displayName += {{ property.name }} + " ";
+        {% endif %}
+        {% endfor %}
+
+        return displayName.trim();
+    }
+
+    @Override
+    public String toString() {
+        return "{{ entity_name_pascalcase }}[" + getId() + "]";
+    }
+
 }
 

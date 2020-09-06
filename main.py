@@ -5,6 +5,7 @@ from textx.export import metamodel_export, model_export
 
 from config import jinja_configuration
 from const.dot_export import META_MODEL_DOT, MODEL_DOT, DIRECTORY_NAME
+from utilities.entity_parser import parse_entities
 from utilities.jinja_utils import *
 from utilities.template_utils import get_application_name, get_jsp_metadata
 
@@ -13,15 +14,15 @@ this_folder = dirname(__file__)
 
 def get_entity_metamodel():
     simple_types = {
-        BYTE: SimpleType(None, BYTE),
-        SHORT: SimpleType(None, SHORT),
-        INT: SimpleType(None, INT),
-        LONG: SimpleType(None, LONG),
-        FLOAT: SimpleType(None, FLOAT),
-        DOUBLE: SimpleType(None, DOUBLE),
-        BOOLEAN: SimpleType(None, BOOLEAN),
-        CHAR: SimpleType(None, CHAR),
-        STRING: SimpleType(None, STRING)
+        BYTE: SimpleType(BYTE),
+        SHORT: SimpleType(SHORT),
+        INT: SimpleType(INT),
+        LONG: SimpleType(LONG),
+        FLOAT: SimpleType(FLOAT),
+        DOUBLE: SimpleType(DOUBLE),
+        BOOLEAN: SimpleType(BOOLEAN),
+        CHAR: SimpleType(CHAR),
+        STRING: SimpleType(STRING)
     }
     return metamodel_from_file('meta/entity.tx', classes=[SimpleType], builtins=simple_types)
 
@@ -46,7 +47,8 @@ def main():
                    "datatables_css": datatables_css, "datatables_js": datatables_js}
 
     from code_generation.generating_processor import generate_app
-    generate_app(render_args, environment, entities=user_model.entities, metamodel=metamodel)
+    parsed_entities = parse_entities(user_model.entities)
+    generate_app(render_args, environment, entities=parsed_entities, metamodel=metamodel)
 
     dot_directory = create_directory(DIRECTORY_NAME)
     export_models(metamodel, user_model, dot_directory=dot_directory)

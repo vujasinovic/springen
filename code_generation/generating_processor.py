@@ -7,9 +7,10 @@ from utilities.template_utils import extract_package_segments, entity_package_pa
 
 
 def generate_app(render_args, environment, entities, metamodel):
-    app_name, package_paths, model_configs, resource_package_path = get_metadata(metamodel, 'model/model.ent')
+    app_name, package_paths, model_configs, resource_package_path, base = get_metadata(metamodel, 'model/model.ent')
 
     templates = get_templates(jinja_environment=environment)
+    render_args['entities'] = entities
     generate_commons(render_args, templates, package_paths)
 
     jsp_directory = create_directory(join(package_paths.get('webapp'), WEB_INF, JSP))
@@ -29,14 +30,17 @@ def generate_app(render_args, environment, entities, metamodel):
 
         model_directory = create_directory(join(java_package_path, "bom"))
         service_directory = create_directory(join(java_package_path, "service"))
+        grpc_service_directory = create_directory(join(java_package_path, "grpc"))
         controller_directory = create_directory(join(java_package_path, "controller"))
         dto_directory = create_directory(join(java_package_path, "dto"))
         converter_directory = create_directory(join(java_package_path, "converter"))
         repo_directory = create_directory(join(java_package_path, "repository"))
 
         generate(model_directory, templates[BOM_TEMPLATE], BOM_TEMPLATE, render_args, entity_name)
+        generate(model_directory, templates[PROTO_TEMPLATE], PROTO_TEMPLATE, render_args, entity_name)
         generate(repo_directory, templates[ENTITY_REPOSITORY_TEMPLATE], ENTITY_REPOSITORY_TEMPLATE, render_args,
                  entity_name)
+        generate(grpc_service_directory, templates[GRPC_SERVICE_TEMPLATE], GRPC_SERVICE_TEMPLATE, render_args, entity_name)
         generate(service_directory, templates[SERVICE_TEMPLATE], SERVICE_TEMPLATE, render_args, entity_name)
         generate(service_directory, templates[SERVICE_IMPLEMENTATION_TEMPLATE], SERVICE_IMPLEMENTATION_TEMPLATE,
                  render_args, entity_name)
@@ -65,9 +69,12 @@ def get_templates(jinja_environment):
         BASE_REPOSITORY_TEMPLATE: jinja_environment.get_template(BASE_REPOSITORY_TEMPLATE_FILE),
         BASE_REPOSITORY_IMPL_TEMPLATE: jinja_environment.get_template(BASE_REPOSITORY_IMPL_TEMPLATE_FILE),
         ENTITY_REPOSITORY_TEMPLATE: jinja_environment.get_template(ENTITY_REPOSITORY_TEMPLATE_FILE),
+        GRPC_SERVICE_TEMPLATE: jinja_environment.get_template(GRPC_SERVICE_TEMPLATE_FILE),
         SERVICE_TEMPLATE: jinja_environment.get_template(SERVICE_TEMPLATE_FILE),
         SERVICE_IMPLEMENTATION_TEMPLATE: jinja_environment.get_template(SERVICE_IMPLEMENTATION_FILE),
         MAIN_TEMPLATE: jinja_environment.get_template(MAIN_TEMPLATE_FILE),
+        POM_TEMPLATE: jinja_environment.get_template(POM_TEMPLATE_FILE),
+        PROTO_TEMPLATE: jinja_environment.get_template(PROTO_TEMPLATE_FILE),
         CONTROLLER_TEMPLATE: jinja_environment.get_template(CONTROLLER_TEMPLATE_FILE),
         DTO_TEMPLATE: jinja_environment.get_template(DTO_TEMPLATE_FILE),
         CONVERTER_ENTITY_TO_DTO_TEMPLATE: jinja_environment.get_template(CONVERTER_ENTITY_TO_DTO_TEMPLATE_FILE),
@@ -98,19 +105,22 @@ def get_metadata(metamodel, model_path):
     package_path_segments = extract_package_segments(GENERATED_ROOT_PACKAGE)
     root = join(GENERATED_APP_DIRECTORY, SRC, MAIN)
     java_package_path = join(root, JAVA, *package_path_segments)
+    proto_package_path = join(root, PROTO)
     resources_package_path = join(root, RESOURCES)
     webapp_package_path = join(root, WEBAPP)
 
     package_paths = {
         'root': root,
         'java': java_package_path,
+        'proto': proto_package_path,
         'resources': resources_package_path,
-        'webapp': webapp_package_path
+        'webapp': webapp_package_path,
+        'base': GENERATED_APP_DIRECTORY
     }
 
     model_configs = user_model.configs
 
-    return app_name, package_paths, model_configs, resources_package_path
+    return app_name, package_paths, model_configs, resources_package_path, GENERATED_APP_DIRECTORY
 
 
 def generate_commons(render_args, templates, package_paths):
@@ -123,10 +133,16 @@ def generate_commons(render_args, templates, package_paths):
     """
 
     main_directory = create_directory(package_paths.get('java'))
+    proto_directory = create_directory(package_paths.get('proto'))
     repository_directory = create_directory(join(package_paths.get('java'), 'repository'))
     jsp_directory = create_directory(join(package_paths.get('webapp'), WEB_INF, JSP))
     resource_directory = create_directory(join(package_paths.get('resources')))
+    base_directory = create_directory(join(package_paths.get('base')))
+    proto_directory = create_directory(package_paths.get('proto'))
 
+    generate(proto_directory, templates[PROTO_TEMPLATE], PROTO_TEMPLATE, render_args)
+    generate(base_directory, templates[POM_TEMPLATE], POM_TEMPLATE, render_args)
+    generate(base_directory, templates[POM_TEMPLATE], POM_TEMPLATE, render_args)
     generate(main_directory, templates[MAIN_TEMPLATE], MAIN_TEMPLATE, render_args)
     generate(repository_directory, templates[BASE_REPOSITORY_TEMPLATE], BASE_REPOSITORY_TEMPLATE, render_args)
     generate(repository_directory, templates[BASE_REPOSITORY_IMPL_TEMPLATE], BASE_REPOSITORY_IMPL_TEMPLATE, render_args)

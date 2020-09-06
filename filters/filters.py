@@ -20,7 +20,6 @@ def plural(st):
 def is_simple_type(obj_type):
     return isinstance(obj_type, SimpleType)
 
-
 def template_name(template):
     full_qualified_name = template._TemplateReference__context.name
     begin_ind = full_qualified_name.rfind('/') + 1
