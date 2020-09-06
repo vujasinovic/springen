@@ -11,6 +11,9 @@ def main(directory, app_name, entity_name):
 def pom(directory, app_name, entity_name):
     return join(directory, 'pom.xml')
 
+def proto(directory, app_name, entity_name):
+    return join(directory, 'main.proto')
+
 def base_repository(directory, app_name, entity_name):
     return join(directory, to_pascalcase(app_name) + 'Repository.java')
 
@@ -33,6 +36,9 @@ def entity_repository(directory, app_name, entity_name):
 
 def service(directory, app_name, entity_name):
     return join(directory, '%sService.java' % entity_name)
+
+def grpc_service(directory, app_name, entity_name):
+    return join(directory, '%sGrpcService.java' % entity_name)
 
 
 def service_implementation(directory, app_name, entity_name):
@@ -75,11 +81,13 @@ def generate(directory, template, template_name, render_args, entity_name=""):
     switcher = {
         MAIN_TEMPLATE: main,
         POM_TEMPLATE: pom,
+        PROTO_TEMPLATE: proto,
         BASE_REPOSITORY_TEMPLATE: base_repository,
         BASE_REPOSITORY_IMPL_TEMPLATE: base_repository_impl,
         NAVBAR_TEMPLATE: navbar,
         BOM_TEMPLATE: bom,
         ENTITY_REPOSITORY_TEMPLATE: entity_repository,
+        GRPC_SERVICE_TEMPLATE: grpc_service,
         SERVICE_TEMPLATE: service,
         SERVICE_IMPLEMENTATION_TEMPLATE: service_implementation,
         CONTROLLER_TEMPLATE: controller,

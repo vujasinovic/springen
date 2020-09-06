@@ -72,3 +72,5 @@ spring:
     properties:
       hibernate:
         dialect: {{ hibernateDialect_value }}
+grpc:
+    port: 6565
