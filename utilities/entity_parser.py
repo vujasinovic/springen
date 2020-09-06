@@ -6,7 +6,7 @@ def parse_entities(entities):
     unknown_type_properties = []
 
     for entity in entities:
-        entity_type = SimpleType(entity.name, is_user_type=True, belongsTo=entity.belongsTo)
+        entity_type = SimpleType(entity.name, is_user_type=True, belongsTo=entity.belongsTo, parent=entity.parent)
 
         for property in entity.properties:
             data_type = property.type

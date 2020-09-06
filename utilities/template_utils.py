@@ -5,7 +5,7 @@ def entity_package_path(entity):
     if entity.belongsTo is None:
         default_path = GENERATED_ROOT_PACKAGE
         return default_path
-    package_names_reversed = entity_package_uri(entity.parent, entity.belongsTo.package)
+    package_names_reversed = entity_package_uri(entity.parent, entity.belongsTo.package, [])
     package_names = package_names_reversed[::-1]
     full_path = full_package_path(package_names)
     return full_path

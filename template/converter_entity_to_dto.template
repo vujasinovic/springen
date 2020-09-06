@@ -17,6 +17,8 @@ import java.util.*;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
+{{ utils.gen_entity_imports(entity = entity, ent_dict = entities_packages_dict, package_type ='dto', component_type='Dto') }}
+
 @Component
 @RequiredArgsConstructor
 public class {{ entity_name_pascalcase }}To{{ entity_name_pascalcase }}DtoConverter implements Converter<{{ entity_name_pascalcase }},{{ entity_name_pascalcase }}Dto> {

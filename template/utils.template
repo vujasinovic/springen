@@ -15,3 +15,13 @@
     ########################################  END ################################################
 */
 {%- endmacro -%}
+
+{%- macro gen_entity_imports(entity, ent_dict, package_type, component_type='') -%}
+{% for property in entity.properties%}
+    {% if property.type.is_user_type %}
+    {% set entityName = property.type | javatype %}
+import {{ent_dict[entityName]}}.{{package_type}}.{{property.type | javatype}}{{component_type}};
+    {% endif %}
+{% endfor %}
+{%- endmacro -%}
+

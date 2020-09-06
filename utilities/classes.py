@@ -1,11 +1,12 @@
 class SimpleType(object):
-    def __init__(self, name, properties=None, belongsTo=None, is_user_type=False):
+    def __init__(self, name, parent=None, properties=None, belongsTo=None, is_user_type=False):
         if properties is None:
             properties = []
         self.belongsTo = belongsTo
         self.name = name
         self.properties = properties
         self.is_user_type = is_user_type
+        self.parent = parent
 
     def __str__(self):
         return self.name
