@@ -1,4 +1,5 @@
 entity Home {
+    package -> child
     id: int
     display title: string
     description: string

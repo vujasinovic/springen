@@ -7,6 +7,8 @@ package {{ packagePath }}.dto;
 
 import java.util.*;
 
+{{ utils.gen_entity_imports(entity = entity, ent_dict = entities_packages_dict, package_type ='dto', component_type='Dto') }}
+
 public class {{ entity_name_pascalcase }}Dto {
 
     {% for property in entity.properties%}

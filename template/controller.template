@@ -34,8 +34,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
+
+{{ utils.gen_entity_imports(entity = entity, ent_dict = entities_packages_dict, package_type ='service', component_type='Service') }}
 
 @Controller
 @RequestMapping(value = "/{{ entity_name_plural }}")

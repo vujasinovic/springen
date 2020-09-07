@@ -1,8 +1,11 @@
+{% import 'template/utils.template' as utils %}
 package {{packagePath}}.bom;
 
 import javax.persistence.*;
 
 import java.util.*;
+
+{{ utils.gen_entity_imports(entity = entity, ent_dict = entities_packages_dict, package_type ='bom') }}
 
 @Entity
 @Table(name = "{{entity.name}}")

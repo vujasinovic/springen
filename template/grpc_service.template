@@ -1,13 +1,17 @@
-package rs.ftn.grpc;
+{% import 'template/utils.template' as utils %}
+package {{ packagePath }}.grpc;
 
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 
 import org.lognet.springboot.grpc.GRpcService;
-import {{ packagePath }}.*;
-import {{ packagePath }}.Void;
+import {{ default_package }}.*;
+import {{ default_package }}.Void;
+
 import {{ packagePath }}.dto.*;
-import rs.ftn.service.*;
+import {{ packagePath }}.service.*;
+
+{{ utils.gen_entity_imports(entity = entity, ent_dict = entities_packages_dict, package_type ='dto', component_type='Dto') }}
 
 @GRpcService
 @RequiredArgsConstructor
