@@ -13,6 +13,7 @@ Also, Springen has [gRPC](https://grpc.io/).
 ## Example
 
 This is example for meta model and model.
+There are links for [language](https://github.com/vujasinovic/springen/blob/development/meta/entity.tx) and [example of language](https://github.com/vujasinovic/springen/blob/development/model/model.ent) in our repository.
 
 ### Meta model
 
