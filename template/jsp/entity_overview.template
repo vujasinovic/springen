@@ -38,7 +38,7 @@
 	                        {% elif not property.type.is_user_type %}
 	                        <span class="font-weight-bold">{{ opening_curly_brace }}{{ entity_name }}.{{ property.name | to_lowercase }}{{ closing_curly_brace }}</span>
                             {% else %}
-                            {% set property_plural = property.name | to_lowercase %}
+                            {% set property_plural = property.name | to_lowercase | to_plural %}
                             {% set property_name = property.name | to_pascalcase %}
                             {% set property_id = '${' ~ entity_name ~ '.' ~ property.name | to_lowercase ~ '.id}' %}
                             <a href="<c:url value="/{{property_plural}}/{{property_id}}"/>"> ${ {{entity_name}}.{{property.name}}.displayName } </a>
