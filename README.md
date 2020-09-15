@@ -47,7 +47,7 @@ $ pip install .
 2. Generate
 
 ```python
-$ textx generate ~/Desktop/model/model.ent --language SpringLang --target spring -o gen_out
+$ textx generate model.ent --language SpringLang --target spring -o generated_app
 ```
 ## Technologies used
 * Python 3.6+
