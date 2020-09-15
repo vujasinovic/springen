@@ -1,0 +1,11 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package rs.ftn;
+
+
+message Id {
+        int32 id = 1;
+}
+
+message Void {}
+
