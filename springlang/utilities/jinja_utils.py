@@ -2,11 +2,11 @@ import datetime
 from os import environ
 import jinja2
 
-from const import javatypes as javatypes
-from const.constants import GENERATED_ROOT_PACKAGE
-from const.simpletypes import *
-from filters.filters import *
-from utilities.classes import Property
+from springlang.const import javatypes as javatypes
+from springlang.const.constants import GENERATED_ROOT_PACKAGE
+from springlang.const.simpletypes import *
+from springlang.filters.filters import *
+from springlang.utilities.classes import Property
 
 
 def dto_declaration(property):

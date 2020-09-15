@@ -1,4 +1,4 @@
-from utilities.classes import SimpleType
+from springlang.utilities.classes import SimpleType
 
 
 def to_pascalcase(st):

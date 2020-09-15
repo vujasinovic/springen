@@ -1,4 +1,4 @@
-from utilities.classes import SimpleType, Property
+from springlang.utilities.classes import SimpleType, Property
 
 
 def parse_entities(entities):

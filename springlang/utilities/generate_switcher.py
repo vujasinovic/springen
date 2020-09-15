@@ -1,8 +1,8 @@
 from os.path import join
 
-from const.constants import *
-from filters.filters import to_pascalcase, plural, to_lowercase
-from utilities.template_utils import write_to_file
+from springlang.const.constants import *
+from springlang.filters.filters import to_pascalcase, plural, to_lowercase
+from springlang.utilities.template_utils import write_to_file
 
 
 def main(directory, app_name, entity_name):

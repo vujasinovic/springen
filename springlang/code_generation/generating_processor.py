@@ -1,19 +1,19 @@
 from os.path import join
 
-from const.constants import *
-from utilities.directory_utils import create_directory
-from utilities.generate_switcher import generate
-from utilities.template_utils import extract_package_segments, entity_package_path, get_application_name
+from springlang.const.constants import *
+from springlang.utilities.directory_utils import create_directory
+from springlang.utilities.generate_switcher import generate
+from springlang.utilities.template_utils import extract_package_segments, entity_package_path, get_application_name
 
 
-def generate_app(render_args, environment, entities, metamodel):
-    app_name, package_paths, model_configs, resource_package_path, base = get_metadata(metamodel, 'model/model.ent')
+def generate_app(render_args, environment, entities, metamodel, model_path, output_path, folder):
+    app_name, package_paths, model_configs, resource_package_path, base = get_metadata(metamodel, model_path, output_path)
 
     templates = get_templates(jinja_environment=environment)
     render_args['entities'] = entities
-    generate_commons(render_args, templates, package_paths)
+    generate_commons(render_args, templates, package_paths, folder)
 
-    jsp_directory = create_directory(join(package_paths.get('webapp'), WEB_INF, JSP))
+    jsp_directory = create_directory(join(package_paths.get('webapp'), WEB_INF, JSP), folder)
 
     entities_packages_dict = find_imports(entities)
 
@@ -31,13 +31,13 @@ def generate_app(render_args, environment, entities, metamodel):
         }
         entity_name = entity.name
 
-        model_directory = create_directory(join(java_package_path, "bom"))
-        service_directory = create_directory(join(java_package_path, "service"))
-        grpc_service_directory = create_directory(join(java_package_path, "grpc"))
-        controller_directory = create_directory(join(java_package_path, "controller"))
-        dto_directory = create_directory(join(java_package_path, "dto"))
-        converter_directory = create_directory(join(java_package_path, "converter"))
-        repo_directory = create_directory(join(java_package_path, "repository"))
+        model_directory = create_directory(join(java_package_path, "bom"), folder)
+        service_directory = create_directory(join(java_package_path, "service"), folder)
+        grpc_service_directory = create_directory(join(java_package_path, "grpc"), folder)
+        controller_directory = create_directory(join(java_package_path, "controller"), folder)
+        dto_directory = create_directory(join(java_package_path, "dto"), folder)
+        converter_directory = create_directory(join(java_package_path, "converter"), folder)
+        repo_directory = create_directory(join(java_package_path, "repository"), folder)
 
         generate(model_directory, templates[BOM_TEMPLATE], BOM_TEMPLATE, render_args, entity_name)
         generate(model_directory, templates[PROTO_TEMPLATE], PROTO_TEMPLATE, render_args, entity_name)
@@ -106,7 +106,7 @@ def get_templates(jinja_environment):
     return templates
 
 
-def get_metadata(metamodel, model_path):
+def get_metadata(metamodel, model_path, output_path):
     """
     Helper function that returns data needed for code generation
 
@@ -119,7 +119,7 @@ def get_metadata(metamodel, model_path):
     app_name = get_application_name(user_model.configs)
 
     package_path_segments = extract_package_segments(GENERATED_ROOT_PACKAGE)
-    root = join(GENERATED_APP_DIRECTORY, SRC, MAIN)
+    root = join(output_path, SRC, MAIN)
     java_package_path = join(root, JAVA, *package_path_segments)
     proto_package_path = join(root, PROTO)
     resources_package_path = join(root, RESOURCES)
@@ -131,15 +131,15 @@ def get_metadata(metamodel, model_path):
         'proto': proto_package_path,
         'resources': resources_package_path,
         'webapp': webapp_package_path,
-        'base': GENERATED_APP_DIRECTORY
+        'base': output_path
     }
 
     model_configs = user_model.configs
 
-    return app_name, package_paths, model_configs, resources_package_path, GENERATED_APP_DIRECTORY
+    return app_name, package_paths, model_configs, resources_package_path, output_path
 
 
-def generate_commons(render_args, templates, package_paths):
+def generate_commons(render_args, templates, package_paths, folder):
     """
     Helper function which generates code which is not dependent on specific entity.
 
@@ -148,13 +148,13 @@ def generate_commons(render_args, templates, package_paths):
     :param package_paths: dictionary which holds root, java, resources and webapp paths
     """
 
-    main_directory = create_directory(package_paths.get('java'))
-    proto_directory = create_directory(package_paths.get('proto'))
-    repository_directory = create_directory(join(package_paths.get('java'), 'repository'))
-    jsp_directory = create_directory(join(package_paths.get('webapp'), WEB_INF, JSP))
-    resource_directory = create_directory(join(package_paths.get('resources')))
-    base_directory = create_directory(join(package_paths.get('base')))
-    proto_directory = create_directory(package_paths.get('proto'))
+    main_directory = create_directory(package_paths.get('java'), folder)
+    proto_directory = create_directory(package_paths.get('proto'), folder)
+    repository_directory = create_directory(join(package_paths.get('java'), 'repository'), folder)
+    jsp_directory = create_directory(join(package_paths.get('webapp'), WEB_INF, JSP), folder)
+    resource_directory = create_directory(join(package_paths.get('resources')), folder)
+    base_directory = create_directory(join(package_paths.get('base')), folder)
+    proto_directory = create_directory(package_paths.get('proto'), folder)
 
     generate(proto_directory, templates[PROTO_TEMPLATE], PROTO_TEMPLATE, render_args)
     generate(base_directory, templates[POM_TEMPLATE], POM_TEMPLATE, render_args)

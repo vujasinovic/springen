@@ -130,6 +130,6 @@ dmypy.json
 .idea
 
 # Generated files
-/generated_app/
-dot/
+/springlang/generated_app/
+springlang/dot/
 *.dot

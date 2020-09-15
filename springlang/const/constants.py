@@ -1,5 +1,3 @@
-GENERATED_APP_DIRECTORY = 'generated_app'
-
 SRC = 'src'
 MAIN = 'main'
 

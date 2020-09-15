@@ -1,10 +1,10 @@
 from setuptools import setup, find_packages
 
-PACKAGE_NAME = 'meta'
+PACKAGE_NAME = 'SpringLang'
 VERSION = "0.1.0"
 AUTHOR = 'JSD TEAM 14'
 AUTHOR_EMAIL = 'luka.ra109@uns.ac.rs'
-DESCRIPTION = 'language for springboot app generation'
+DESCRIPTION = 'language for springboot app generation 1111'
 KEYWORDS = "textX DSL python domain specific languages entity"
 LICENSE = "MIT"
 URL = 'https://github.com/vujasinovic/springen'
@@ -20,9 +20,9 @@ setup(
     license=LICENSE,
     packages=find_packages(),
     include_package_data=True,
-    package_data={"": ["*.tx"]},
-    install_requires=["textx_ls_core"],
-    entry_points={"textx_languages": ["entity = meta:entity"]},
+    package_data={"": ["*.tx", "template/commons/*", "template/*", "template/jsp/*"]},
+    install_requires=["textx", "Jinja2"],
+    entry_points={"textx_languages": ["entity = springlang.meta:entity"], "textx_generators": ["EntityGen = springlang:entity_gen"]},
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: Developers",

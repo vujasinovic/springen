@@ -1,4 +1,4 @@
-from const.constants import *
+from springlang.const.constants import *
 
 
 def entity_package_path(entity):
