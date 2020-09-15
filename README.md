@@ -36,6 +36,19 @@ Detail overview
 
 ![image of overview_single](https://github.com/vujasinovic/springen/blob/import/images/overview_single.PNG)
 
+## Instructions
+
+1. Install 
+
+```python
+$ pip install .
+```
+
+2. Generate
+
+```python
+$ textx generate model.ent --language SpringLang --target spring -o generated_app
+```
 ## Technologies used
 * Python 3.6+
 * [textX](https://textx.github.io/textX/stable/)
