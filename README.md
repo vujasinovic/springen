@@ -1,5 +1,7 @@
 #  Springen
-You can find demo [here](https://youtu.be/IGTRRLgFVmo).
+Springen is domain specific language (DSL) for data modeling. Language is used to generate fully functional Spring Boot application with basic crud operations.
+
+Find demo [here](https://youtu.be/IGTRRLgFVmo).
 ## Description
 Springen is created for the purpose of the Domain-Specific Languages course at the Faculty of Technical Sciences, University of Novi Sad.
 
